@@ -1,0 +1,23 @@
+// Prisma schema for PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model BehavioralEvent {
+  id          String   @id @default(uuid())
+  userId      String
+  taskType    String?
+  plannedTime DateTime?
+  executedTime DateTime?
+  energyLevel Int?
+  moodLevel   Int?
+  difficulty  Int?
+  outcome     String?
+  createdAt   DateTime @default(now())
+}
