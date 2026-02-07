@@ -1,7 +1,7 @@
 # 🧠 sentinelOS — A Personal Decision Intelligence System
 
 > Most productivity tools track what you do.
-> sentinelOS understands how you function — and helps you make better decisions.
+> sentinelOS understands how you function and helps you make better decisions.
 
 sentinelOS is a behavioral intelligence platform that detects performance patterns, predicts decision risk, and provides personalized recommendations to improve execution and prevent burnout.
 
@@ -20,7 +20,7 @@ They fail because they cannot see their behavioral patterns:
 - Repeating decisions that historically fail
 - Ignoring early burnout signals
 
-Existing tools collect data — but do not reason about it.
+Existing tools collect data but do not reason about it.
 
 sentinelOS closes that gap.
 
