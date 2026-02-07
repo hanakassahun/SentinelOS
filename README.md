@@ -1,4 +1,4 @@
-# 🧠 sentinelOS — A Personal Decision Intelligence System
+# 🧠 sentinelOS -> A Personal Decision Intelligence System
 
 > Most productivity tools track what you do.
 > sentinelOS understands how you function and helps you make better decisions.
