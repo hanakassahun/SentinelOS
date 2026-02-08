@@ -5,8 +5,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
 }
 
 model BehavioralEvent {
@@ -20,4 +19,44 @@ model BehavioralEvent {
   difficulty  Int?
   outcome     String?
   createdAt   DateTime @default(now())
+}
+
+enum BehaviorType {
+  ENERGY
+  MOOD
+}
+
+enum TagCategory {
+  Location
+  State
+  Activity
+}
+
+model Log {
+  id            String       @id @default(uuid())
+  userId        String
+  behaviorType  BehaviorType
+  value         Int
+  expectedValue Int?
+  timestamp     DateTime
+  timezone      String?
+  note          String?
+  createdAt     DateTime     @default(now())
+  tags          LogTag[]
+}
+
+model Tag {
+  id       String   @id @default(uuid())
+  name     String   @unique
+  category TagCategory?
+  logs     LogTag[]
+}
+
+model LogTag {
+  log   Log   @relation(fields: [logId], references: [id])
+  logId String
+  tag   Tag   @relation(fields: [tagId], references: [id])
+  tagId String
+
+  @@id([logId, tagId])
 }
