@@ -60,3 +60,12 @@ model LogTag {
 
   @@id([logId, tagId])
 }
+
+model Insight {
+  id           String    @id @default(uuid())
+  behaviorType BehaviorType
+  insights     Json
+  analysis     Json
+  generatedAt  DateTime  @default(now())
+  createdAt    DateTime  @default(now())
+}
