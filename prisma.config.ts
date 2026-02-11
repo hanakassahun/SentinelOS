@@ -3,16 +3,14 @@
 import "dotenv/config";
 import { defineConfig } from "prisma/config";
 
+ // ...existing code...
 export default defineConfig({
   schema: "prisma/schema.prisma",
   migrations: {
     path: "prisma/migrations",
   },
   datasource: {
-    provider: "sqlite",
-    adapter: {
-      name: "@prisma/adapter-better-sqlite3",
-      url: process.env["DATABASE_URL"],
-    },
+  url: process.env["DATABASE_URL"],
+ 
   },
 });
