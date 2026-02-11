@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import prisma from '../../services/prismaClient';
 import { analyzeEnergy } from '../../../intelligence/energyAnalyzer';
 import { generateEnergyInsights } from '../../../intelligence/insightGenerator';
+import { getLogs } from '../../services/insightsService';
+import { generateInsightsFromLogs } from '../../../internal/intelligence/insightGenerator';
 
 // Simple in-memory cache for analysis/insights (per-process). Cached for 24h by default.
 let cached: { ts: number; insights: any[]; analysis: any } | null = null;
@@ -101,5 +103,16 @@ export async function refreshInsights(_req: Request, res: Response) {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to refresh insights' });
+  }
+}
+
+export async function getInsightsSimple(_req: Request, res: Response) {
+  try {
+    const logs = await getLogs();
+    const report = generateInsightsFromLogs(logs);
+    res.json(report);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to generate simple insights' });
   }
 }
