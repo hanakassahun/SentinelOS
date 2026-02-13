@@ -1,0 +1,97 @@
+/* [project]/Desktop/SentinelOS/client/components/quicklog.module.css [app-client] (css) */
+.quicklog-module__WtJ82q__container {
+  border: 1px solid #e6e6e6;
+  border-radius: 8px;
+  max-width: 720px;
+  padding: 12px;
+}
+
+.quicklog-module__WtJ82q__row {
+  gap: 12px;
+  margin-bottom: 12px;
+  display: flex;
+}
+
+.quicklog-module__WtJ82q__bigButton {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  flex: 1;
+  padding: 14px 18px;
+  font-size: 16px;
+}
+
+.quicklog-module__WtJ82q__bigButton:focus {
+  outline: 3px solid #bee3f8;
+}
+
+.quicklog-module__WtJ82q__form {
+  margin-top: 8px;
+}
+
+.quicklog-module__WtJ82q__label {
+  margin-top: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  display: block;
+}
+
+.quicklog-module__WtJ82q__info {
+  gap: 12px;
+  margin: 6px 0 12px;
+  display: flex;
+}
+
+.quicklog-module__WtJ82q__rangeLabels {
+  color: #666;
+  justify-content: space-between;
+  font-size: 12px;
+  display: flex;
+}
+
+.quicklog-module__WtJ82q__tagsRow {
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0;
+  display: flex;
+}
+
+.quicklog-module__WtJ82q__tag {
+  background: #fafafa;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 6px 8px;
+}
+
+.quicklog-module__WtJ82q__tagActive {
+  background: #bee3f8;
+  border: 1px solid #2b6cb0;
+  border-radius: 6px;
+  padding: 6px 8px;
+}
+
+.quicklog-module__WtJ82q__tag:focus, .quicklog-module__WtJ82q__tagActive:focus {
+  outline: 2px dashed #2b6cb0;
+}
+
+.quicklog-module__WtJ82q__actions {
+  margin-top: 12px;
+}
+
+.quicklog-module__WtJ82q__save {
+  color: #fff;
+  background: #2b6cb0;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+}
+
+.quicklog-module__WtJ82q__toast {
+  background: #edf2f7;
+  border-radius: 6px;
+  margin-top: 12px;
+  padding: 8px 12px;
+  position: relative;
+}
+
+/*# sourceMappingURL=Desktop_SentinelOS_client_components_quicklog_module_ed1cc290.css.map*/

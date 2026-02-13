@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 1, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/PC/Desktop/SentinelOS/client/styles/globals.css"],"sourcesContent":["html,body{padding:0;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial}\r\n"],"names":[],"mappings":"AAAA"}}]
+}

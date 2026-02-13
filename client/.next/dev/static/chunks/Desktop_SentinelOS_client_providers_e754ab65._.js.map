@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/PC/Desktop/SentinelOS/client/providers/AuthProvider.tsx"],"sourcesContent":["import React, { createContext, useContext, useState } from 'react';\r\n\r\nconst AuthContext = createContext<any>(null);\r\n\r\nexport function AuthProvider({ children }: { children: React.ReactNode }) {\r\n  const [user, setUser] = useState(null);\r\n  return <AuthContext.Provider value={{ user, setUser }}>{children}</AuthContext.Provider>;\r\n}\r\n\r\nexport function useAuth() {\r\n  return useContext(AuthContext);\r\n}\r\n"],"names":[],"mappings":";;;;;;;AAAA;;;;AAEA,MAAM,4BAAc,IAAA,iNAAa,EAAM;AAEhC,SAAS,aAAa,EAAE,QAAQ,EAAiC;;IACtE,MAAM,CAAC,MAAM,QAAQ,GAAG,IAAA,4MAAQ,EAAC;IACjC,qBAAO,gOAAC,YAAY,QAAQ;QAAC,OAAO;YAAE;YAAM;QAAQ;kBAAI;;;;;;AAC1D;GAHgB;KAAA;AAKT,SAAS;;IACd,OAAO,IAAA,8MAAU,EAAC;AACpB;IAFgB"}},
+    {"offset": {"line": 47, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/PC/Desktop/SentinelOS/client/providers/RootProviders.tsx"],"sourcesContent":["\"use client\";\r\n\r\nimport React from 'react';\r\nimport { AuthProvider } from './AuthProvider';\r\n\r\nexport default function RootProviders({ children }: { children: React.ReactNode }) {\r\n  return <AuthProvider>{children}</AuthProvider>;\r\n}\r\n"],"names":[],"mappings":";;;;;AAGA;AAHA;;;AAKe,SAAS,cAAc,EAAE,QAAQ,EAAiC;IAC/E,qBAAO,gOAAC,gLAAY;kBAAE;;;;;;AACxB;KAFwB"}}]
+}
