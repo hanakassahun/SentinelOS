@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only app.ts",
+    "dev": "ts-node-dev --respawn --transpile-only scripts/start_dev_server.ts",
     "start": "node dist/server/app.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev"
