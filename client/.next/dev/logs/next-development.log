@@ -1,32 +1,8 @@
-[00:00:13.729] Server  LOG     ✓ Ready in 13.4s
-[00:00:32.286] Server  WARN    ⚠ Cross origin request detected from 192.168.1.7 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
-Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
-[00:00:32.345] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:33.180] Browser ERROR   {}
-[00:01:04.942] Browser ERROR   {}
-[00:01:10.936] Browser ERROR   {}
-[00:21:01.529] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:21:01.795] Browser ERROR   {}
-[00:21:05.440] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:21:05.659] Browser ERROR   {}
-[00:32:12.140] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:32:12.955] Server  ERROR   ⨯ TypeError: fetch failed
-[00:32:13.074] Browser ERROR   {"message":"Failed to execute 'json' on 'Response': Unexpected end of JSON input"}
-[00:34:30.806] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:34:30.944] Server  ERROR   ⨯ TypeError: fetch failed
-[00:34:31.053] Browser ERROR   {"message":"Failed to execute 'json' on 'Response': Unexpected end of JSON input"}
-[00:34:33.403] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:34:33.577] Server  ERROR   ⨯ TypeError: fetch failed
-[00:34:33.693] Browser ERROR   {"message":"Failed to execute 'json' on 'Response': Unexpected end of JSON input"}
-[00:35:56.639] Server  ERROR   ⨯ TypeError: fetch failed
-[00:35:58.611] Server  ERROR   ⨯ TypeError: fetch failed
-[00:36:21.799] Server  ERROR   ⨯ TypeError: fetch failed
-[00:37:38.085] Server  ERROR   ⨯ TypeError: fetch failed
-[00:37:38.191] Browser ERROR   {}
-[00:37:47.307] Server  ERROR   ⨯ TypeError: fetch failed
-[00:37:47.419] Browser ERROR   {}
-[00:38:24.572] Server  ERROR   ⨯ TypeError: fetch failed
-[00:38:24.678] Browser ERROR   {}
-[00:41:17.910] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:41:18.110] Server  ERROR   ⨯ TypeError: fetch failed
-[00:41:18.217] Browser ERROR   {"message":"Failed to execute 'json' on 'Response': Unexpected end of JSON input"}
+[00:00:00.740] Server  LOG     ✓ Ready in 519ms
+[00:00:22.589] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:22.928] Server  ERROR   ⨯ TypeError: fetch failed
+[00:00:23.045] Browser ERROR   {"message":"Failed to execute 'json' on 'Response': Unexpected end of JSON input"}
+[00:00:36.161] Server  ERROR   ⨯ TypeError: fetch failed
+[00:00:36.265] Browser ERROR   {}
+[00:00:43.956] Server  ERROR   ⨯ TypeError: fetch failed
+[00:00:44.069] Browser ERROR   {}
