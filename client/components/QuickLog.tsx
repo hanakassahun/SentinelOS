@@ -268,6 +268,9 @@ export default function QuickLog() {
           <input type="time" value={reminderTime} onChange={(e) => setReminderTime(e.target.value)} />
           <div style={{ fontSize: 12, color: '#666' }}>Notifications must be allowed in your browser.</div>
         </div>
+        <div style={{ marginTop: 8, fontSize: 12, color: '#666' }}>
+          <strong>Note:</strong> In-browser reminders only fire while this page is open. To enable notifications for this site: Chrome/Edge — Settings → Privacy & security → Site settings → Notifications → allow this site; Firefox — Site Settings (padlock) → Permissions → Notifications → Allow.
+        </div>
 
         <label className={styles.label}>Note (optional)</label>
         <input value={note} onChange={(e) => setNote(e.target.value)} />
