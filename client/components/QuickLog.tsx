@@ -28,12 +28,92 @@ export default function QuickLog() {
       return [];
     }
   });
+  const [dailyReminderEnabled, setDailyReminderEnabled] = useState<boolean>(() => {
+    try { return localStorage.getItem('dailyReminderEnabled') === 'true'; } catch { return false; }
+  });
+  const [reminderTime, setReminderTime] = useState<string>(() => {
+    try { return localStorage.getItem('dailyReminderTime') || '20:00'; } catch { return '20:00'; }
+  });
+  const reminderTimerRef = React.useRef<number | null>(null);
+
+  function msUntilNext(timeStr: string) {
+    try {
+      const [hh, mm] = timeStr.split(':').map((s) => Number(s));
+      const now = new Date();
+      const next = new Date(now);
+      next.setHours(hh, mm, 0, 0);
+      if (next.getTime() <= now.getTime()) next.setDate(next.getDate() + 1);
+      return next.getTime() - now.getTime();
+    } catch {
+      return 24 * 3600 * 1000;
+    }
+  }
+
+  function showReminderNotification() {
+    try {
+      if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+        // eslint-disable-next-line no-new
+        new Notification("QuickLog reminder", { body: "Tap to log your behavior for today." });
+      } else {
+        setMessage('Reminder: time to log your behavior');
+      }
+    } catch (e) {
+      // ignore
+    }
+  }
+
+  function scheduleReminder() {
+    if (reminderTimerRef.current) {
+      window.clearTimeout(reminderTimerRef.current);
+      reminderTimerRef.current = null;
+    }
+    const ms = msUntilNext(reminderTime);
+    reminderTimerRef.current = window.setTimeout(() => {
+      showReminderNotification();
+      // schedule next day
+      scheduleReminder();
+    }, ms) as unknown as number;
+  }
+
+  function cancelReminder() {
+    if (reminderTimerRef.current) {
+      window.clearTimeout(reminderTimerRef.current);
+      reminderTimerRef.current = null;
+    }
+  }
 
   useEffect(() => {
     if (!message) return;
     const t = setTimeout(() => setMessage(null), 2500);
     return () => clearTimeout(t);
   }, [message]);
+
+  useEffect(() => {
+    // initialize scheduling
+    if (dailyReminderEnabled) {
+      if (typeof Notification !== 'undefined' && Notification.permission !== 'granted') {
+        Notification.requestPermission().then((p) => {
+          if (p === 'granted') scheduleReminder();
+        }).catch(() => {
+          // ignore
+        });
+      } else {
+        scheduleReminder();
+      }
+    } else {
+      cancelReminder();
+    }
+    // persist
+    try { localStorage.setItem('dailyReminderEnabled', String(dailyReminderEnabled)); } catch {}
+    try { localStorage.setItem('dailyReminderTime', reminderTime); } catch {}
+
+    const onVisibility = () => {
+      // reschedule when user returns
+      if (dailyReminderEnabled) scheduleReminder();
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => { document.removeEventListener('visibilitychange', onVisibility); cancelReminder(); };
+  }, [dailyReminderEnabled, reminderTime]);
 
   function toggleTag(name: string) {
     setTags((s) => (s.includes(name) ? s.filter((t) => t !== name) : [...s, name]));
@@ -180,6 +260,13 @@ export default function QuickLog() {
               {t}
             </button>
           ))}
+        </div>
+
+        <label className={styles.label}>Daily reminder</label>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          <input type="checkbox" checked={dailyReminderEnabled} onChange={(e) => setDailyReminderEnabled(e.target.checked)} />
+          <input type="time" value={reminderTime} onChange={(e) => setReminderTime(e.target.value)} />
+          <div style={{ fontSize: 12, color: '#666' }}>Notifications must be allowed in your browser.</div>
         </div>
 
         <label className={styles.label}>Note (optional)</label>
