@@ -1,4 +1,5 @@
 import { calculateAverage, detectTrend, correlate } from '../pattern-engine/analysis';
+import { analyzeEnergy } from '../../intelligence/energyAnalyzer';
 
 function weekStartFor(date: Date) {
   const d = new Date(date);
@@ -71,8 +72,53 @@ export function generateInsightsFromLogs(logs: any[]) {
   // Ensure at least one recommendation per recent week (even if empty buckets)
   // (Already produced above for any week with data.)
 
-  // Return combined report
-  return { insights, analysis: { count: values.length, average: avg, trend }, weeklyRecommendations };
+  const report: any = { insights, analysis: { count: values.length, average: avg, trend }, weeklyRecommendations };
+
+  // If these look like energy-style numeric logs (1-10), produce explainable guidance
+  const looksLikeEnergy = values.length > 0 && values.every((v) => typeof v === 'number' && v >= 0 && v <= 10);
+  if (looksLikeEnergy) {
+    try {
+      const energyLogs = logs.map((l) => ({ value: Number(l.value), timestamp: l.timestamp || l.time || l.createdAt || l.ts }));
+      const ea = analyzeEnergy(energyLogs);
+      const guidance: Array<{ message: string; recommendation?: string }> = [];
+
+      if (ea.peakPeriod) {
+        const pct = ea.weeklyAverage ? Math.round(((ea.peakPeriod.avg - (ea.weeklyAverage || 0)) / (ea.weeklyAverage || 1)) * 100) : 0;
+        const whenPhraseMap: Record<string, string> = {
+          Night: 'at night',
+          Morning: 'before noon',
+          Afternoon: 'in the afternoon',
+          Evening: 'in the evening',
+          Late: 'late at night',
+        };
+        const when = whenPhraseMap[ea.peakPeriod.label] || `during ${ea.peakPeriod.label}`;
+        const msg = `Your highest average energy is ${ea.peakPeriod.avg} (${ea.peakPeriod.count} reports) ${when}.`;
+        const rec = pct > 10 ? `You are about ${Math.abs(pct)}% ${ea.peakPeriod.avg > (ea.weeklyAverage || 0) ? 'more' : 'less'} energetic ${when} compared to your weekly average — schedule demanding tasks ${when}.` : `Consider scheduling demanding tasks ${when} when possible.`;
+        guidance.push({ message: msg, recommendation: rec });
+      }
+
+      if (ea.suddenDrop) {
+        guidance.push({
+          message: `Today's average energy is down ${ea.suddenDrop.percent}% compared to your weekly average.`,
+          recommendation: 'Take it easier today: postpone high-effort tasks and prioritize rest or short focused sessions.',
+        });
+      }
+
+      if (ea.trendPercent !== undefined && Math.abs(ea.trendPercent) >= 10) {
+        const dir = ea.trendPercent > 0 ? 'increasing' : 'decreasing';
+        guidance.push({
+          message: `Your recent energy is ${dir} (${Math.abs(ea.trendPercent)}% change).`,
+          recommendation: ea.trendPercent > 0 ? 'Leverage this momentum for important work.' : 'Consider reducing load and scheduling recovery time.',
+        });
+      }
+
+      if (guidance.length) report.explainableGuidance = guidance;
+    } catch (e) {
+      // non-fatal: don't break insight generation
+    }
+  }
+
+  return report;
 }
 
 export default { generateInsightsFromLogs };
