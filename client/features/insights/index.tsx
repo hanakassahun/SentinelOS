@@ -5,6 +5,7 @@ import Heatmap from '../../components/Heatmap';
 export default function Insights() {
   const [matrix, setMatrix] = useState<number[][]>([]);
   const [weeklyRecs, setWeeklyRecs] = useState<any[]>([]);
+  const [guidance, setGuidance] = useState<any[]>([]);
 
   useEffect(() => {
     // build a small demo heatmap (7 days x 24 hours) or try fetch from server
@@ -13,6 +14,7 @@ export default function Insights() {
         const res = await fetch('/api/insights/simple');
         const payload = await res.json();
         if (Array.isArray(payload.weeklyRecommendations)) setWeeklyRecs(payload.weeklyRecommendations);
+        if (Array.isArray(payload.explainableGuidance)) setGuidance(payload.explainableGuidance);
         // payload may include logs: try to build hourly counts over last 7 days
         const logs = Array.isArray(payload.logs) ? payload.logs : Array.isArray(payload) ? payload : [];
         const now = new Date();
@@ -49,7 +51,19 @@ export default function Insights() {
         <Heatmap matrix={matrix} xLabels={Array.from({ length: 24 }).map((_,i)=>String(i))} yLabels={['6d','5d','4d','3d','2d','1d','today']} title="Hourly activity (recent days)" />
       </div>
       <div style={{ marginTop: 24 }}>
-        <h3>Weekly Recommendations</h3>
+        <h3>Explainable Guidance</h3>
+        {guidance.length === 0 ? <p>No guidance available.</p> : (
+          <ul>
+            {guidance.map((g, idx) => (
+              <li key={`g-${idx}`} style={{ marginBottom: 8 }}>
+                <div><strong>{g.message}</strong></div>
+                {g.recommendation ? <div style={{ fontSize: 13 }}>{g.recommendation}</div> : null}
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <h3 style={{ marginTop: 18 }}>Weekly Recommendations</h3>
         {weeklyRecs.length === 0 ? <p>No recommendations yet.</p> : (
           <ul>
             {weeklyRecs.map((w, idx) => (

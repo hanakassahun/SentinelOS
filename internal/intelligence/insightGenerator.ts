@@ -118,6 +118,55 @@ export function generateInsightsFromLogs(logs: any[]) {
     }
   }
 
+  // Generic numeric-behavior guidance for other numeric logs
+  const looksLikeNumeric = values.length > 0 && values.every((v) => typeof v === 'number' && !Number.isNaN(v));
+  if (!looksLikeEnergy && looksLikeNumeric) {
+    try {
+      // time-of-day buckets
+      const buckets: { label: string; start: number; end: number; count: number; values: number[] }[] = [
+        { label: 'Night', start: 0, end: 6, count: 0, values: [] },
+        { label: 'Morning', start: 6, end: 12, count: 0, values: [] },
+        { label: 'Afternoon', start: 12, end: 17, count: 0, values: [] },
+        { label: 'Evening', start: 17, end: 21, count: 0, values: [] },
+        { label: 'Late', start: 21, end: 24, count: 0, values: [] },
+      ];
+      points.forEach((p) => {
+        const h = p.date.getHours();
+        const b = buckets.find((bk) => h >= bk.start && h < bk.end) || buckets[0];
+        b.count += 1;
+        b.values.push(p.value);
+      });
+      const total = values.length;
+      const top = buckets.slice().sort((a, b) => b.count - a.count)[0];
+      const behaviorLabel = (logs[0] && (logs[0].behaviorType || logs[0].type || logs[0].name)) || 'this behavior';
+      const guidance: Array<{ message: string; recommendation?: string }> = [];
+      if (top && top.count / total >= 0.55) {
+        const pct = Math.round((top.count / total) * 100);
+        guidance.push({
+          message: `You report ${behaviorLabel} ${pct}% of the time ${top.label.toLowerCase()}.`,
+          recommendation: `If possible, schedule or expect ${behaviorLabel} ${top.label.toLowerCase()}.`,
+        });
+      }
+
+      // Average-based guidance
+      if (avg !== null) {
+        if (avg >= 8) {
+          guidance.push({ message: `Your average ${behaviorLabel} is high (${avg.toFixed(1)}).`, recommendation: 'Consider whether this reflects a sustained pattern and adjust planning accordingly.' });
+        } else if (avg <= 3) {
+          guidance.push({ message: `Your average ${behaviorLabel} is low (${avg.toFixed(1)}).`, recommendation: 'Consider small, consistent actions to raise this metric if desired.' });
+        }
+      }
+
+      if (trend === 'upward' || trend === 'downward') {
+        guidance.push({ message: `Your recent ${behaviorLabel} trend is ${trend}.`, recommendation: trend === 'upward' ? 'Leverage this momentum.' : 'Consider interventions to reverse the decline.' });
+      }
+
+      if (guidance.length) report.explainableGuidance = (report.explainableGuidance || []).concat(guidance);
+    } catch (e) {
+      // ignore
+    }
+  }
+
   return report;
 }
 
