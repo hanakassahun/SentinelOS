@@ -1,8 +1,1 @@
-[00:00:00.740] Server  LOG     ✓ Ready in 519ms
-[00:00:22.589] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:22.928] Server  ERROR   ⨯ TypeError: fetch failed
-[00:00:23.045] Browser ERROR   {"message":"Failed to execute 'json' on 'Response': Unexpected end of JSON input"}
-[00:00:36.161] Server  ERROR   ⨯ TypeError: fetch failed
-[00:00:36.265] Browser ERROR   {}
-[00:00:43.956] Server  ERROR   ⨯ TypeError: fetch failed
-[00:00:44.069] Browser ERROR   {}
+[00:00:00.740] Server  LOG     ✓ Ready in 521ms

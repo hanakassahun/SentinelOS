@@ -5,10 +5,8 @@ const nextConfig = {
     // ensure Next infers the client folder as root when multiple lockfiles exist
     root: './',
   },
-  experimental: {
-    // allow dev origins to prevent cross-origin dev warnings when using LAN host
-    allowedDevOrigins: ['http://localhost:3000', 'http://127.0.0.1:3000'],
-  },
+  // Remove invalid experimental keys; Next.js 16.1.6 does not support allowedDevOrigins
+  // If you need CORS or dev origin support, use a custom server or proxy.
 }
 
 module.exports = nextConfig;
