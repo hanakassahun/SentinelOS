@@ -6,7 +6,9 @@ generator client {
 
 datasource db {
   provider = "sqlite"
+  url      = "file:../dev.db"
 }
+
 
 model BehavioralEvent {
   id          String   @id @default(uuid())
@@ -19,17 +21,6 @@ model BehavioralEvent {
   difficulty  Int?
   outcome     String?
   createdAt   DateTime @default(now())
-}
-
-enum BehaviorType {
-  ENERGY
-  MOOD
-}
-
-enum TagCategory {
-  Location
-  State
-  Activity
 }
 
 model Log {
@@ -46,6 +37,17 @@ model Log {
   tags          LogTag[]
   
   @@index([userId, createdAt])
+// removed extra closing brace
+// Move enums to the end
+enum BehaviorType {
+  ENERGY
+  MOOD
+}
+
+enum TagCategory {
+  Location
+  State
+  Activity
 }
 
 model Tag {
@@ -63,6 +65,18 @@ model LogTag {
 
   @@id([logId, tagId])
 }
+}
+
+model DecisionLog {
+  id            String   @id @default(uuid())
+  userId        String?
+  action        String
+  context       Json
+  outcome       String
+  productivityDrop Int?
+  createdAt     DateTime @default(now())
+}
+
 
 model Insight {
   id           String    @id @default(uuid())

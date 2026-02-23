@@ -1,4 +1,4 @@
-import { calculateAverage, detectTrend, correlate } from '../pattern-engine/analysis';
+import { calculateAverage, detectTrend, correlate } from '../../internal/pattern-engine/analysis';
 import { analyzeEnergy } from '../../intelligence/energyAnalyzer';
 
 function weekStartFor(date: Date) {
