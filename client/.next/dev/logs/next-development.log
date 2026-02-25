@@ -288,3 +288,262 @@ Import trace:
   Server Component:
     ./features/dashboard/index.tsx
     ./app/page.tsx
+[00:18:17.694] Server  ERROR   ⨯ ./features/dashboard/index.tsx:1:17
+Ecmascript file had an error
+> 1 | import React, { useState } from 'react';
+    |                 ^^^^^^^^
+  2 | import TopNav from '../../components/TopNav';
+  3 | import Card from '../../components/Card';
+  4 | import RiskScore from '../../components/RiskScore';
+
+You're importing a component that needs `useState`. This React Hook only works in a Client Component. To fix, mark the file (or its parent) with the `"use client"` directive.
+
+ Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+
+
+Import trace:
+  Server Component:
+    ./features/dashboard/index.tsx
+    ./app/page.tsx
+
+
+[00:18:18.294] Browser ERROR   uncaughtError: Error: ./features/dashboard/index.tsx:1:17
+Ecmascript file had an error
+> 1 | import React, { useState } from 'react';
+    |                 ^^^^^^^^
+  2 | import TopNav from '../../components/TopNav';
+  3 | import Card from '../../components/Card';
+  4 | import RiskScore from '../../components/RiskScore';
+
+You're importing a component that needs `useState`. This React Hook only works in a Client Component. To fix, mark the file (or its parent) with the `"use client"` directive.
+
+ Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+
+
+Import trace:
+  Server Component:
+    ./features/dashboard/index.tsx
+    ./app/page.tsx
+
+
+[00:18:18.496] Browser ERROR   ./features/dashboard/index.tsx:1:17
+Ecmascript file had an error
+> 1 | import React, { useState } from 'react';
+    |                 ^^^^^^^^
+  2 | import TopNav from '../../components/TopNav';
+  3 | import Card from '../../components/Card';
+  4 | import RiskScore from '../../components/RiskScore';
+
+You're importing a component that needs `useState`. This React Hook only works in a Client Component. To fix, mark the file (or its parent) with the `"use client"` directive.
+
+ Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+Import trace:
+  Server Component:
+    ./features/dashboard/index.tsx
+    ./app/page.tsx
+[00:18:18.496] Browser ERROR   ./features/dashboard/index.tsx:1:17
+Ecmascript file had an error
+> 1 | import React, { useState } from 'react';
+    |                 ^^^^^^^^
+  2 | import TopNav from '../../components/TopNav';
+  3 | import Card from '../../components/Card';
+  4 | import RiskScore from '../../components/RiskScore';
+
+You're importing a component that needs `useState`. This React Hook only works in a Client Component. To fix, mark the file (or its parent) with the `"use client"` directive.
+
+ Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+Import trace:
+  Server Component:
+    ./features/dashboard/index.tsx
+    ./app/page.tsx
+[00:18:23.251] Server  ERROR   ⨯ ./features/dashboard/index.tsx:1:17
+Ecmascript file had an error
+> 1 | import React, { useState } from 'react';
+    |                 ^^^^^^^^
+  2 | import TopNav from '../../components/TopNav';
+  3 | import Card from '../../components/Card';
+  4 | import RiskScore from '../../components/RiskScore';
+
+You're importing a component that needs `useState`. This React Hook only works in a Client Component. To fix, mark the file (or its parent) with the `"use client"` directive.
+
+ Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+
+
+Import trace:
+  Server Component:
+    ./features/dashboard/index.tsx
+    ./app/page.tsx
+
+
+[00:18:23.558] Browser ERROR   uncaughtError: Error: ./features/dashboard/index.tsx:1:17
+Ecmascript file had an error
+> 1 | import React, { useState } from 'react';
+    |                 ^^^^^^^^
+  2 | import TopNav from '../../components/TopNav';
+  3 | import Card from '../../components/Card';
+  4 | import RiskScore from '../../components/RiskScore';
+
+You're importing a component that needs `useState`. This React Hook only works in a Client Component. To fix, mark the file (or its parent) with the `"use client"` directive.
+
+ Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+
+
+Import trace:
+  Server Component:
+    ./features/dashboard/index.tsx
+    ./app/page.tsx
+
+
+[00:18:23.753] Browser ERROR   ./features/dashboard/index.tsx:1:17
+Ecmascript file had an error
+> 1 | import React, { useState } from 'react';
+    |                 ^^^^^^^^
+  2 | import TopNav from '../../components/TopNav';
+  3 | import Card from '../../components/Card';
+  4 | import RiskScore from '../../components/RiskScore';
+
+You're importing a component that needs `useState`. This React Hook only works in a Client Component. To fix, mark the file (or its parent) with the `"use client"` directive.
+
+ Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+Import trace:
+  Server Component:
+    ./features/dashboard/index.tsx
+    ./app/page.tsx
+[00:18:23.753] Browser ERROR   ./features/dashboard/index.tsx:1:17
+Ecmascript file had an error
+> 1 | import React, { useState } from 'react';
+    |                 ^^^^^^^^
+  2 | import TopNav from '../../components/TopNav';
+  3 | import Card from '../../components/Card';
+  4 | import RiskScore from '../../components/RiskScore';
+
+You're importing a component that needs `useState`. This React Hook only works in a Client Component. To fix, mark the file (or its parent) with the `"use client"` directive.
+
+ Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+Import trace:
+  Server Component:
+    ./features/dashboard/index.tsx
+    ./app/page.tsx
+[00:18:25.933] Server  ERROR   ⨯ ./features/dashboard/index.tsx:1:17
+Ecmascript file had an error
+> 1 | import React, { useState } from 'react';
+    |                 ^^^^^^^^
+  2 | import TopNav from '../../components/TopNav';
+  3 | import Card from '../../components/Card';
+  4 | import RiskScore from '../../components/RiskScore';
+
+You're importing a component that needs `useState`. This React Hook only works in a Client Component. To fix, mark the file (or its parent) with the `"use client"` directive.
+
+ Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+
+
+Import trace:
+  Server Component:
+    ./features/dashboard/index.tsx
+    ./app/page.tsx
+
+
+[00:18:26.194] Browser ERROR   uncaughtError: Error: ./features/dashboard/index.tsx:1:17
+Ecmascript file had an error
+> 1 | import React, { useState } from 'react';
+    |                 ^^^^^^^^
+  2 | import TopNav from '../../components/TopNav';
+  3 | import Card from '../../components/Card';
+  4 | import RiskScore from '../../components/RiskScore';
+
+You're importing a component that needs `useState`. This React Hook only works in a Client Component. To fix, mark the file (or its parent) with the `"use client"` directive.
+
+ Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+
+
+Import trace:
+  Server Component:
+    ./features/dashboard/index.tsx
+    ./app/page.tsx
+
+
+[00:18:26.369] Browser ERROR   ./features/dashboard/index.tsx:1:17
+Ecmascript file had an error
+> 1 | import React, { useState } from 'react';
+    |                 ^^^^^^^^
+  2 | import TopNav from '../../components/TopNav';
+  3 | import Card from '../../components/Card';
+  4 | import RiskScore from '../../components/RiskScore';
+
+You're importing a component that needs `useState`. This React Hook only works in a Client Component. To fix, mark the file (or its parent) with the `"use client"` directive.
+
+ Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+Import trace:
+  Server Component:
+    ./features/dashboard/index.tsx
+    ./app/page.tsx
+[00:18:26.370] Browser ERROR   ./features/dashboard/index.tsx:1:17
+Ecmascript file had an error
+> 1 | import React, { useState } from 'react';
+    |                 ^^^^^^^^
+  2 | import TopNav from '../../components/TopNav';
+  3 | import Card from '../../components/Card';
+  4 | import RiskScore from '../../components/RiskScore';
+
+You're importing a component that needs `useState`. This React Hook only works in a Client Component. To fix, mark the file (or its parent) with the `"use client"` directive.
+
+ Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+Import trace:
+  Server Component:
+    ./features/dashboard/index.tsx
+    ./app/page.tsx
+[00:21:59.200] Server  LOG     ✓ Compiled in 33ms
+[00:22:02.409] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:22:04.120] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+%s%s https://react.dev/link/hydration-mismatch 
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="layout.tsx">
+                      <SegmentTrieNode>
+                      <link>
+                      <script>
+                      <script>
+                      <RootLayout>
+                        <html lang="en">
+                          <body
+-                           data-new-gr-c-s-check-loaded="14.1274.0"
+-                           data-gr-ext-installed=""
+                          >
+                  ...
+
+[00:23:28.059] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:24:46.473] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:26:27.410] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:27:02.938] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:27:05.855] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
