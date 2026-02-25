@@ -1,0 +1,29 @@
+.topnav {
+  height: var(--nav-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  background: var(--color-bg);
+  border-bottom: var(--border);
+  font-family: var(--font-heading);
+}
+.left {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: var(--letter-spacing-tight);
+  color: var(--color-text-primary);
+}
+.right {
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+}
+.right a {
+  color: var(--color-text-secondary);
+  margin-left: 1.5rem;
+  text-decoration: none;
+  font-weight: 500;
+}
+.right a:hover {
+  color: var(--color-accent);
+}

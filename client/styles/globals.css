@@ -1,1 +1,57 @@
-html,body{padding:0;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial}
+html,body {
+	padding: 0;
+	margin: 0;
+	font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial;
+	background: #F8FAFC;
+	color: #0F172A;
+}
+
+:root {
+	/* Color system */
+	--color-bg: #F8FAFC;
+	--color-text-primary: #0F172A;
+	--color-text-secondary: #475569;
+	--color-accent: #4F46E5;
+	--color-risk-low: #16A34A;
+	--color-risk-medium: #F59E0B;
+	--color-risk-high: #DC2626;
+
+	/* Card and border */
+	--radius: 8px;
+	--border: 1px solid #E5E7EB;
+	--shadow: 0 1px 4px 0 rgba(15,23,42,0.03);
+
+	/* Typography */
+	--font-heading: 'Inter', system-ui, sans-serif;
+	--font-body: 'Inter', system-ui, sans-serif;
+	--heading-weight: 600;
+	--body-weight: 400;
+	--letter-spacing-tight: -0.01em;
+	--letter-spacing-normal: 0;
+
+	/* Layout */
+	--nav-height: 56px;
+	--sidebar-width: 320px;
+	--content-max-width: 1200px;
+	--timeline-height: 120px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: var(--font-heading);
+	font-weight: var(--heading-weight);
+	letter-spacing: var(--letter-spacing-tight);
+	color: var(--color-text-primary);
+	margin: 0 0 0.5em 0;
+}
+
+p, span, li, label, input, textarea {
+	font-family: var(--font-body);
+	font-weight: var(--body-weight);
+	letter-spacing: var(--letter-spacing-normal);
+	color: var(--color-text-secondary);
+}
+
+a {
+	color: var(--color-accent);
+	text-decoration: none;
+}

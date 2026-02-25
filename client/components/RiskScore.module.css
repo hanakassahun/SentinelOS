@@ -1,0 +1,12 @@
+.score {
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: var(--letter-spacing-tight);
+  transition: color 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  line-height: 1.1;
+}
+.outof {
+  font-size: 1.25rem;
+  color: var(--color-text-secondary);
+  font-weight: 400;
+}

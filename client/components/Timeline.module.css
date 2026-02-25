@@ -1,0 +1,34 @@
+.timeline {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  width: 100%;
+  padding: 1.5rem 0;
+  border-top: var(--border);
+  border-bottom: var(--border);
+  background: #fff;
+  min-height: var(--timeline-height);
+  overflow-x: auto;
+}
+.event {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 100px;
+}
+.dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  margin-bottom: 0.5rem;
+  transition: background 0.4s;
+}
+.label {
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 0.25rem;
+}
+.time {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
