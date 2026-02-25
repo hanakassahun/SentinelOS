@@ -348,22 +348,58 @@ const explanationPoints = [
 ];
 function Dashboard() {
     _s();
-    const [score] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(72);
-    const [riskLevel] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('medium');
-    const [loading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [description, setDescription] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
+    const [tags, setTags] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
+    const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [decision, setDecision] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
     const [showExplanation, setShowExplanation] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [recentDecisions, setRecentDecisions] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
+    // Fetch last 5 decisions
     __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].useEffect({
         "Dashboard.useEffect": ()=>{
-            setTimeout({
-                "Dashboard.useEffect": ()=>setShowExplanation(true)
-            }["Dashboard.useEffect"], 900);
+            fetch("/api/decision").then({
+                "Dashboard.useEffect": (res)=>res.json()
+            }["Dashboard.useEffect"]).then(setRecentDecisions);
         }
     }["Dashboard.useEffect"], []);
+    // Show explanation animation
+    __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].useEffect({
+        "Dashboard.useEffect": ()=>{
+            if (decision) {
+                setShowExplanation(false);
+                setTimeout({
+                    "Dashboard.useEffect": ()=>setShowExplanation(true)
+                }["Dashboard.useEffect"], 900);
+            }
+        }
+    }["Dashboard.useEffect"], [
+        decision
+    ]);
+    const handleSubmit = async (e)=>{
+        e.preventDefault();
+        setLoading(true);
+        setShowExplanation(false);
+        const res = await fetch("/api/decision", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                description,
+                tags
+            })
+        });
+        const data = await res.json();
+        setDecision(data);
+        setLoading(false);
+        // Refresh recent decisions
+        fetch("/api/decision").then((res)=>res.json()).then(setRecentDecisions);
+    };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$TopNav$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                 fileName: "[project]/features/dashboard/index.tsx",
-                lineNumber: 27,
+                lineNumber: 58,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
@@ -380,100 +416,234 @@ function Dashboard() {
                             flex: 1,
                             minWidth: 320
                         },
-                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$Card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
-                                    style: {
-                                        marginBottom: 8
-                                    },
-                                    children: "Action Description"
-                                }, void 0, false, {
-                                    fileName: "[project]/features/dashboard/index.tsx",
-                                    lineNumber: 38,
-                                    columnNumber: 13
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
-                                    placeholder: "Describe the decision or action...",
-                                    style: {
-                                        width: '100%',
-                                        minHeight: 80,
-                                        borderRadius: 'var(--radius)',
-                                        border: 'var(--border)',
-                                        padding: '0.75rem',
-                                        fontSize: 16,
-                                        marginBottom: 16,
-                                        resize: 'vertical'
-                                    }
-                                }, void 0, false, {
-                                    fileName: "[project]/features/dashboard/index.tsx",
-                                    lineNumber: 39,
-                                    columnNumber: 13
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    style: {
-                                        marginBottom: 16
-                                    },
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                            style: {
-                                                fontWeight: 500
-                                            },
-                                            children: "Context Tags (optional)"
-                                        }, void 0, false, {
-                                            fileName: "[project]/features/dashboard/index.tsx",
-                                            lineNumber: 53,
-                                            columnNumber: 15
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
-                                            type: "text",
-                                            placeholder: "Add tags...",
-                                            style: {
-                                                width: '100%',
-                                                borderRadius: 'var(--radius)',
-                                                border: 'var(--border)',
-                                                padding: '0.5rem',
-                                                fontSize: 15,
-                                                marginTop: 6
-                                            }
-                                        }, void 0, false, {
-                                            fileName: "[project]/features/dashboard/index.tsx",
-                                            lineNumber: 54,
-                                            columnNumber: 15
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/features/dashboard/index.tsx",
-                                    lineNumber: 52,
-                                    columnNumber: 13
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                    style: {
-                                        background: 'var(--color-accent)',
-                                        color: '#fff',
-                                        border: 'none',
-                                        borderRadius: 'var(--radius)',
-                                        padding: '0.75rem 1.5rem',
-                                        fontWeight: 600,
-                                        fontSize: 16,
-                                        cursor: 'pointer',
-                                        boxShadow: 'none',
-                                        transition: 'background 0.2s'
-                                    },
-                                    children: "Analyze Decision"
-                                }, void 0, false, {
-                                    fileName: "[project]/features/dashboard/index.tsx",
-                                    lineNumber: 67,
-                                    columnNumber: 13
-                                }, this)
-                            ]
-                        }, void 0, true, {
-                            fileName: "[project]/features/dashboard/index.tsx",
-                            lineNumber: 37,
-                            columnNumber: 11
-                        }, this)
-                    }, void 0, false, {
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$Card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                                        style: {
+                                            marginBottom: 8
+                                        },
+                                        children: "Action Description"
+                                    }, void 0, false, {
+                                        fileName: "[project]/features/dashboard/index.tsx",
+                                        lineNumber: 69,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
+                                        onSubmit: handleSubmit,
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
+                                                value: description,
+                                                onChange: (e)=>setDescription(e.target.value),
+                                                placeholder: "Describe the decision or action...",
+                                                style: {
+                                                    width: '100%',
+                                                    minHeight: 80,
+                                                    borderRadius: 'var(--radius)',
+                                                    border: 'var(--border)',
+                                                    padding: '0.75rem',
+                                                    fontSize: 16,
+                                                    marginBottom: 16,
+                                                    resize: 'vertical'
+                                                },
+                                                required: true
+                                            }, void 0, false, {
+                                                fileName: "[project]/features/dashboard/index.tsx",
+                                                lineNumber: 71,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                style: {
+                                                    marginBottom: 16
+                                                },
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                        style: {
+                                                            fontWeight: 500
+                                                        },
+                                                        children: "Context Tags (optional)"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/features/dashboard/index.tsx",
+                                                        lineNumber: 88,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                        type: "text",
+                                                        value: tags,
+                                                        onChange: (e)=>setTags(e.target.value),
+                                                        placeholder: "Add tags...",
+                                                        style: {
+                                                            width: '100%',
+                                                            borderRadius: 'var(--radius)',
+                                                            border: 'var(--border)',
+                                                            padding: '0.5rem',
+                                                            fontSize: 15,
+                                                            marginTop: 6
+                                                        }
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/features/dashboard/index.tsx",
+                                                        lineNumber: 89,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/features/dashboard/index.tsx",
+                                                lineNumber: 87,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                type: "submit",
+                                                disabled: loading,
+                                                style: {
+                                                    background: loading ? '#c7d2fe' : 'var(--color-accent)',
+                                                    color: '#fff',
+                                                    border: 'none',
+                                                    borderRadius: 'var(--radius)',
+                                                    padding: '0.75rem 1.5rem',
+                                                    fontWeight: 600,
+                                                    fontSize: 16,
+                                                    cursor: loading ? 'not-allowed' : 'pointer',
+                                                    boxShadow: 'none',
+                                                    transition: 'background 0.2s'
+                                                },
+                                                children: loading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$Loader$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
+                                                    fileName: "[project]/features/dashboard/index.tsx",
+                                                    lineNumber: 120,
+                                                    columnNumber: 28
+                                                }, this) : 'Analyze Decision'
+                                            }, void 0, false, {
+                                                fileName: "[project]/features/dashboard/index.tsx",
+                                                lineNumber: 104,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/features/dashboard/index.tsx",
+                                        lineNumber: 70,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/features/dashboard/index.tsx",
+                                lineNumber: 68,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$Card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                        style: {
+                                            marginBottom: 8
+                                        },
+                                        children: "Last 5 Decisions"
+                                    }, void 0, false, {
+                                        fileName: "[project]/features/dashboard/index.tsx",
+                                        lineNumber: 126,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
+                                        style: {
+                                            paddingLeft: 0,
+                                            margin: 0
+                                        },
+                                        children: recentDecisions.map((d)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                style: {
+                                                    marginBottom: 12,
+                                                    listStyle: 'none',
+                                                    borderBottom: '1px solid #e5e7eb',
+                                                    paddingBottom: 8
+                                                },
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        style: {
+                                                            fontWeight: 500
+                                                        },
+                                                        children: d.description
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/features/dashboard/index.tsx",
+                                                        lineNumber: 130,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        style: {
+                                                            color: 'var(--color-text-secondary)',
+                                                            fontSize: 14
+                                                        },
+                                                        children: d.tags
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/features/dashboard/index.tsx",
+                                                        lineNumber: 131,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        style: {
+                                                            color: 'var(--color-risk-' + d.riskLevel + ')',
+                                                            fontWeight: 600
+                                                        },
+                                                        children: [
+                                                            "Score: ",
+                                                            d.riskScore,
+                                                            " (",
+                                                            d.riskLevel,
+                                                            ")"
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/features/dashboard/index.tsx",
+                                                        lineNumber: 132,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        style: {
+                                                            fontSize: 13,
+                                                            color: '#64748b'
+                                                        },
+                                                        children: [
+                                                            "Time: ",
+                                                            new Date(d.createdAt).toLocaleTimeString()
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/features/dashboard/index.tsx",
+                                                        lineNumber: 133,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
+                                                        style: {
+                                                            fontSize: 13,
+                                                            color: '#475569',
+                                                            marginTop: 4
+                                                        },
+                                                        children: d.explanation.map((pt, i)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                                children: pt
+                                                            }, i, false, {
+                                                                fileName: "[project]/features/dashboard/index.tsx",
+                                                                lineNumber: 136,
+                                                                columnNumber: 23
+                                                            }, this))
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/features/dashboard/index.tsx",
+                                                        lineNumber: 134,
+                                                        columnNumber: 19
+                                                    }, this)
+                                                ]
+                                            }, d.id, true, {
+                                                fileName: "[project]/features/dashboard/index.tsx",
+                                                lineNumber: 129,
+                                                columnNumber: 17
+                                            }, this))
+                                    }, void 0, false, {
+                                        fileName: "[project]/features/dashboard/index.tsx",
+                                        lineNumber: 127,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/features/dashboard/index.tsx",
+                                lineNumber: 125,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
                         fileName: "[project]/features/dashboard/index.tsx",
-                        lineNumber: 36,
+                        lineNumber: 67,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -483,122 +653,136 @@ function Dashboard() {
                         },
                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$Card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                             children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    style: {
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: 18,
-                                        marginBottom: 12
-                                    },
+                                decision ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            style: {
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: 18,
+                                                marginBottom: 12
+                                            },
                                             children: [
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    style: {
-                                                        fontWeight: 500,
-                                                        color: 'var(--color-text-secondary)',
-                                                        fontSize: 15
-                                                    },
-                                                    children: "Risk Score"
-                                                }, void 0, false, {
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            style: {
+                                                                fontWeight: 500,
+                                                                color: 'var(--color-text-secondary)',
+                                                                fontSize: 15
+                                                            },
+                                                            children: "Risk Score"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/features/dashboard/index.tsx",
+                                                            lineNumber: 152,
+                                                            columnNumber: 21
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$RiskScore$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                                                            score: decision.riskScore,
+                                                            level: decision.riskLevel
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/features/dashboard/index.tsx",
+                                                            lineNumber: 153,
+                                                            columnNumber: 21
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
                                                     fileName: "[project]/features/dashboard/index.tsx",
-                                                    lineNumber: 91,
-                                                    columnNumber: 17
+                                                    lineNumber: 151,
+                                                    columnNumber: 19
                                                 }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$RiskScore$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                                                    score: score,
-                                                    level: riskLevel
-                                                }, void 0, false, {
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    style: {
+                                                        background: `var(--color-risk-${decision.riskLevel})`,
+                                                        color: '#fff',
+                                                        borderRadius: 6,
+                                                        padding: '0.35em 0.9em',
+                                                        fontWeight: 600,
+                                                        fontSize: 15,
+                                                        marginLeft: 8,
+                                                        letterSpacing: '0.01em',
+                                                        transition: 'background 0.4s'
+                                                    },
+                                                    children: [
+                                                        decision.riskLevel.charAt(0).toUpperCase() + decision.riskLevel.slice(1),
+                                                        " Risk"
+                                                    ]
+                                                }, void 0, true, {
                                                     fileName: "[project]/features/dashboard/index.tsx",
-                                                    lineNumber: 92,
-                                                    columnNumber: 17
+                                                    lineNumber: 155,
+                                                    columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/features/dashboard/index.tsx",
-                                            lineNumber: 90,
-                                            columnNumber: 15
+                                            lineNumber: 150,
+                                            columnNumber: 17
                                         }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             style: {
-                                                background: `var(--color-risk-${riskLevel})`,
-                                                color: '#fff',
-                                                borderRadius: 6,
-                                                padding: '0.35em 0.9em',
-                                                fontWeight: 600,
-                                                fontSize: 15,
-                                                marginLeft: 8,
-                                                letterSpacing: '0.01em',
-                                                transition: 'background 0.4s'
+                                                fontWeight: 500,
+                                                marginBottom: 8
                                             },
-                                            children: [
-                                                riskLevel.charAt(0).toUpperCase() + riskLevel.slice(1),
-                                                " Risk"
-                                            ]
-                                        }, void 0, true, {
+                                            children: "Explanation"
+                                        }, void 0, false, {
                                             fileName: "[project]/features/dashboard/index.tsx",
-                                            lineNumber: 94,
-                                            columnNumber: 15
+                                            lineNumber: 171,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
+                                            style: {
+                                                paddingLeft: 18,
+                                                margin: 0
+                                            },
+                                            children: decision.explanation.map((pt, i)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                    style: {
+                                                        opacity: showExplanation ? 1 : 0,
+                                                        transition: `opacity 0.4s ${0.15 * i + 0.2}s`,
+                                                        marginBottom: 6
+                                                    },
+                                                    children: pt
+                                                }, i, false, {
+                                                    fileName: "[project]/features/dashboard/index.tsx",
+                                                    lineNumber: 174,
+                                                    columnNumber: 21
+                                                }, this))
+                                        }, void 0, false, {
+                                            fileName: "[project]/features/dashboard/index.tsx",
+                                            lineNumber: 172,
+                                            columnNumber: 17
                                         }, this)
                                     ]
-                                }, void 0, true, {
-                                    fileName: "[project]/features/dashboard/index.tsx",
-                                    lineNumber: 89,
-                                    columnNumber: 13
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                }, void 0, true) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     style: {
-                                        fontWeight: 500,
-                                        marginBottom: 8
+                                        color: 'var(--color-text-secondary)',
+                                        fontSize: 15
                                     },
-                                    children: "Explanation"
+                                    children: "Submit a decision to see risk evaluation."
                                 }, void 0, false, {
                                     fileName: "[project]/features/dashboard/index.tsx",
-                                    lineNumber: 110,
-                                    columnNumber: 13
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
-                                    style: {
-                                        paddingLeft: 18,
-                                        margin: 0
-                                    },
-                                    children: explanationPoints.map((pt, i)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
-                                            style: {
-                                                opacity: showExplanation ? 1 : 0,
-                                                transition: `opacity 0.4s ${0.15 * i + 0.2}s`,
-                                                marginBottom: 6
-                                            },
-                                            children: pt
-                                        }, i, false, {
-                                            fileName: "[project]/features/dashboard/index.tsx",
-                                            lineNumber: 113,
-                                            columnNumber: 17
-                                        }, this))
-                                }, void 0, false, {
-                                    fileName: "[project]/features/dashboard/index.tsx",
-                                    lineNumber: 111,
-                                    columnNumber: 13
+                                    lineNumber: 188,
+                                    columnNumber: 15
                                 }, this),
                                 loading && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$Loader$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                     fileName: "[project]/features/dashboard/index.tsx",
-                                    lineNumber: 125,
+                                    lineNumber: 190,
                                     columnNumber: 25
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/features/dashboard/index.tsx",
-                            lineNumber: 88,
+                            lineNumber: 147,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/features/dashboard/index.tsx",
-                        lineNumber: 87,
+                        lineNumber: 146,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/features/dashboard/index.tsx",
-                lineNumber: 28,
+                lineNumber: 59,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -607,42 +791,25 @@ function Dashboard() {
                     margin: '0 auto 2.5rem auto'
                 },
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$Timeline$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                    events: [
-                        {
-                            label: 'Decision Created',
-                            risk: null,
-                            time: '09:00'
-                        },
-                        {
-                            label: 'Pattern Detected',
-                            risk: 'medium',
-                            time: '09:10'
-                        },
-                        {
-                            label: 'Risk Evaluated',
-                            risk: 'medium',
-                            time: '09:12'
-                        },
-                        {
-                            label: 'Finalized',
-                            risk: 'low',
-                            time: '09:15'
-                        }
-                    ]
+                    events: recentDecisions.map((d)=>({
+                            label: d.description,
+                            risk: d.riskLevel,
+                            time: new Date(d.createdAt).toLocaleTimeString()
+                        }))
                 }, void 0, false, {
                     fileName: "[project]/features/dashboard/index.tsx",
-                    lineNumber: 131,
+                    lineNumber: 196,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/features/dashboard/index.tsx",
-                lineNumber: 130,
+                lineNumber: 195,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true);
 }
-_s(Dashboard, "XPHwfIb/2EdxXjMmieKqT+l0Gq0=");
+_s(Dashboard, "bUsKQ96vhZMBGuYabjA/+ODjah0=");
 _c = Dashboard;
 var _c;
 __turbopack_context__.k.register(_c, "Dashboard");

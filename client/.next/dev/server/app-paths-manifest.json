@@ -1,3 +1,4 @@
 {
+  "/api/decision/route": "app/api/decision/route.js",
   "/page": "app/page.js"
 }

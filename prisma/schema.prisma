@@ -1,3 +1,12 @@
+model Decision {
+  id          Int      @id @default(autoincrement())
+  description String
+  tags        String?
+  riskScore   Int
+  riskLevel   String
+  explanation String
+  createdAt   DateTime @default(now())
+}
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 

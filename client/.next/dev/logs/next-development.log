@@ -547,3 +547,390 @@ It can also happen if the client has a browser extension installed which messes 
 [00:26:27.410] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
 [00:27:02.938] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
 [00:27:05.855] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:37:15.037] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:50:28.487] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:52:00.075] Server  LOG     ✓ Compiled in 10ms
+[00:52:00.183] Server  ERROR   ⨯ ./app/api/decision/route.ts:2:1
+Module not found: Can't resolve '@prisma/client'
+  1 | import { NextRequest, NextResponse } from 'next/server';
+> 2 | import { PrismaClient } from '@prisma/client';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 |
+  4 | const prisma = new PrismaClient();
+  5 |
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[00:52:01.126] Browser ERROR   ./app/api/decision/route.ts:2:1
+Module not found: Can't resolve '@prisma/client'
+  1 | import { NextRequest, NextResponse } from 'next/server';
+> 2 | import { PrismaClient } from '@prisma/client';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 |
+  4 | const prisma = new PrismaClient();
+  5 |
+
+https://nextjs.org/docs/messages/module-not-found
+[00:52:32.120] Browser ERROR   ./app/api/decision/route.ts:2:1
+Module not found: Can't resolve '@prisma/client'
+  1 | import { NextRequest, NextResponse } from 'next/server';
+> 2 | import { PrismaClient } from '@prisma/client';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 |
+  4 | const prisma = new PrismaClient();
+  5 |
+
+https://nextjs.org/docs/messages/module-not-found
+[00:57:23.558] Browser ERROR   uncaughtError: Error: ./app/api/decision/route.ts:2:1
+Module not found: Can't resolve '@prisma/client'
+  1 | import { NextRequest, NextResponse } from 'next/server';
+> 2 | import { PrismaClient } from '@prisma/client';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 |
+  4 | const prisma = new PrismaClient();
+  5 |
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[00:57:23.762] Browser ERROR   ./app/api/decision/route.ts:2:1
+Module not found: Can't resolve '@prisma/client'
+  1 | import { NextRequest, NextResponse } from 'next/server';
+> 2 | import { PrismaClient } from '@prisma/client';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 |
+  4 | const prisma = new PrismaClient();
+  5 |
+
+https://nextjs.org/docs/messages/module-not-found
+[00:57:23.763] Browser ERROR   ./app/api/decision/route.ts:2:1
+Module not found: Can't resolve '@prisma/client'
+  1 | import { NextRequest, NextResponse } from 'next/server';
+> 2 | import { PrismaClient } from '@prisma/client';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 |
+  4 | const prisma = new PrismaClient();
+  5 |
+
+https://nextjs.org/docs/messages/module-not-found
+[01:00:59.722] Browser ERROR   uncaughtError: Error: ./app/api/decision/route.ts:2:1
+Module not found: Can't resolve '@prisma/client'
+  1 | import { NextRequest, NextResponse } from 'next/server';
+> 2 | import { PrismaClient } from '@prisma/client';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 |
+  4 | const prisma = new PrismaClient();
+  5 |
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[01:00:59.917] Browser ERROR   ./app/api/decision/route.ts:2:1
+Module not found: Can't resolve '@prisma/client'
+  1 | import { NextRequest, NextResponse } from 'next/server';
+> 2 | import { PrismaClient } from '@prisma/client';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 |
+  4 | const prisma = new PrismaClient();
+  5 |
+
+https://nextjs.org/docs/messages/module-not-found
+[01:00:59.917] Browser ERROR   ./app/api/decision/route.ts:2:1
+Module not found: Can't resolve '@prisma/client'
+  1 | import { NextRequest, NextResponse } from 'next/server';
+> 2 | import { PrismaClient } from '@prisma/client';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 |
+  4 | const prisma = new PrismaClient();
+  5 |
+
+https://nextjs.org/docs/messages/module-not-found
+[01:01:01.959] Browser ERROR   uncaughtError: Error: ./app/api/decision/route.ts:2:1
+Module not found: Can't resolve '@prisma/client'
+  1 | import { NextRequest, NextResponse } from 'next/server';
+> 2 | import { PrismaClient } from '@prisma/client';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 |
+  4 | const prisma = new PrismaClient();
+  5 |
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[01:01:02.155] Browser ERROR   ./app/api/decision/route.ts:2:1
+Module not found: Can't resolve '@prisma/client'
+  1 | import { NextRequest, NextResponse } from 'next/server';
+> 2 | import { PrismaClient } from '@prisma/client';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 |
+  4 | const prisma = new PrismaClient();
+  5 |
+
+https://nextjs.org/docs/messages/module-not-found
+[01:01:02.155] Browser ERROR   ./app/api/decision/route.ts:2:1
+Module not found: Can't resolve '@prisma/client'
+  1 | import { NextRequest, NextResponse } from 'next/server';
+> 2 | import { PrismaClient } from '@prisma/client';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 |
+  4 | const prisma = new PrismaClient();
+  5 |
+
+https://nextjs.org/docs/messages/module-not-found
+[01:01:59.362] Browser ERROR   uncaughtError: Error: ./app/api/decision/route.ts:2:1
+Module not found: Can't resolve '@prisma/client'
+  1 | import { NextRequest, NextResponse } from 'next/server';
+> 2 | import { PrismaClient } from '@prisma/client';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 |
+  4 | const prisma = new PrismaClient();
+  5 |
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[01:01:59.525] Browser ERROR   ./app/api/decision/route.ts:2:1
+Module not found: Can't resolve '@prisma/client'
+  1 | import { NextRequest, NextResponse } from 'next/server';
+> 2 | import { PrismaClient } from '@prisma/client';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 |
+  4 | const prisma = new PrismaClient();
+  5 |
+
+https://nextjs.org/docs/messages/module-not-found
+[01:01:59.525] Browser ERROR   ./app/api/decision/route.ts:2:1
+Module not found: Can't resolve '@prisma/client'
+  1 | import { NextRequest, NextResponse } from 'next/server';
+> 2 | import { PrismaClient } from '@prisma/client';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 |
+  4 | const prisma = new PrismaClient();
+  5 |
+
+https://nextjs.org/docs/messages/module-not-found
+[01:04:13.125] Browser ERROR   ./app/api/decision/route.ts:2:1
+Module not found: Can't resolve '@prisma/client'
+  1 | import { NextRequest, NextResponse } from 'next/server';
+> 2 | import { PrismaClient } from '@prisma/client';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 |
+  4 | const prisma = new PrismaClient();
+  5 |
+
+https://nextjs.org/docs/messages/module-not-found
+[01:04:22.777] Browser ERROR   uncaughtError: Error: ./app/api/decision/route.ts:2:1
+Module not found: Can't resolve '@prisma/client'
+  1 | import { NextRequest, NextResponse } from 'next/server';
+> 2 | import { PrismaClient } from '@prisma/client';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 |
+  4 | const prisma = new PrismaClient();
+  5 |
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[01:04:22.972] Browser ERROR   ./app/api/decision/route.ts:2:1
+Module not found: Can't resolve '@prisma/client'
+  1 | import { NextRequest, NextResponse } from 'next/server';
+> 2 | import { PrismaClient } from '@prisma/client';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 |
+  4 | const prisma = new PrismaClient();
+  5 |
+
+https://nextjs.org/docs/messages/module-not-found
+[01:04:22.972] Browser ERROR   ./app/api/decision/route.ts:2:1
+Module not found: Can't resolve '@prisma/client'
+  1 | import { NextRequest, NextResponse } from 'next/server';
+> 2 | import { PrismaClient } from '@prisma/client';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 |
+  4 | const prisma = new PrismaClient();
+  5 |
+
+https://nextjs.org/docs/messages/module-not-found
+[01:04:25.843] Browser ERROR   uncaughtError: Error: ./app/api/decision/route.ts:2:1
+Module not found: Can't resolve '@prisma/client'
+  1 | import { NextRequest, NextResponse } from 'next/server';
+> 2 | import { PrismaClient } from '@prisma/client';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 |
+  4 | const prisma = new PrismaClient();
+  5 |
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[01:04:26.019] Browser ERROR   ./app/api/decision/route.ts:2:1
+Module not found: Can't resolve '@prisma/client'
+  1 | import { NextRequest, NextResponse } from 'next/server';
+> 2 | import { PrismaClient } from '@prisma/client';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 |
+  4 | const prisma = new PrismaClient();
+  5 |
+
+https://nextjs.org/docs/messages/module-not-found
+[01:04:26.019] Browser ERROR   ./app/api/decision/route.ts:2:1
+Module not found: Can't resolve '@prisma/client'
+  1 | import { NextRequest, NextResponse } from 'next/server';
+> 2 | import { PrismaClient } from '@prisma/client';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 |
+  4 | const prisma = new PrismaClient();
+  5 |
+
+https://nextjs.org/docs/messages/module-not-found
+[01:05:46.828] Browser ERROR   uncaughtError: Error: ./app/api/decision/route.ts:2:1
+Module not found: Can't resolve '@prisma/client'
+  1 | import { NextRequest, NextResponse } from 'next/server';
+> 2 | import { PrismaClient } from '@prisma/client';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 |
+  4 | const prisma = new PrismaClient();
+  5 |
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[01:05:47.014] Browser ERROR   ./app/api/decision/route.ts:2:1
+Module not found: Can't resolve '@prisma/client'
+  1 | import { NextRequest, NextResponse } from 'next/server';
+> 2 | import { PrismaClient } from '@prisma/client';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 |
+  4 | const prisma = new PrismaClient();
+  5 |
+
+https://nextjs.org/docs/messages/module-not-found
+[01:05:47.014] Browser ERROR   ./app/api/decision/route.ts:2:1
+Module not found: Can't resolve '@prisma/client'
+  1 | import { NextRequest, NextResponse } from 'next/server';
+> 2 | import { PrismaClient } from '@prisma/client';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 |
+  4 | const prisma = new PrismaClient();
+  5 |
+
+https://nextjs.org/docs/messages/module-not-found
+[01:05:49.006] Browser ERROR   uncaughtError: Error: ./app/api/decision/route.ts:2:1
+Module not found: Can't resolve '@prisma/client'
+  1 | import { NextRequest, NextResponse } from 'next/server';
+> 2 | import { PrismaClient } from '@prisma/client';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 |
+  4 | const prisma = new PrismaClient();
+  5 |
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[01:05:49.189] Browser ERROR   ./app/api/decision/route.ts:2:1
+Module not found: Can't resolve '@prisma/client'
+  1 | import { NextRequest, NextResponse } from 'next/server';
+> 2 | import { PrismaClient } from '@prisma/client';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 |
+  4 | const prisma = new PrismaClient();
+  5 |
+
+https://nextjs.org/docs/messages/module-not-found
+[01:05:49.189] Browser ERROR   ./app/api/decision/route.ts:2:1
+Module not found: Can't resolve '@prisma/client'
+  1 | import { NextRequest, NextResponse } from 'next/server';
+> 2 | import { PrismaClient } from '@prisma/client';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 |
+  4 | const prisma = new PrismaClient();
+  5 |
+
+https://nextjs.org/docs/messages/module-not-found
+[01:05:50.303] Browser ERROR   uncaughtError: Error: ./app/api/decision/route.ts:2:1
+Module not found: Can't resolve '@prisma/client'
+  1 | import { NextRequest, NextResponse } from 'next/server';
+> 2 | import { PrismaClient } from '@prisma/client';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 |
+  4 | const prisma = new PrismaClient();
+  5 |
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[01:05:50.494] Browser ERROR   ./app/api/decision/route.ts:2:1
+Module not found: Can't resolve '@prisma/client'
+  1 | import { NextRequest, NextResponse } from 'next/server';
+> 2 | import { PrismaClient } from '@prisma/client';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 |
+  4 | const prisma = new PrismaClient();
+  5 |
+
+https://nextjs.org/docs/messages/module-not-found
+[01:05:50.494] Browser ERROR   ./app/api/decision/route.ts:2:1
+Module not found: Can't resolve '@prisma/client'
+  1 | import { NextRequest, NextResponse } from 'next/server';
+> 2 | import { PrismaClient } from '@prisma/client';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 |
+  4 | const prisma = new PrismaClient();
+  5 |
+
+https://nextjs.org/docs/messages/module-not-found
+[01:05:55.661] Browser ERROR   uncaughtError: Error: ./app/api/decision/route.ts:2:1
+Module not found: Can't resolve '@prisma/client'
+  1 | import { NextRequest, NextResponse } from 'next/server';
+> 2 | import { PrismaClient } from '@prisma/client';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 |
+  4 | const prisma = new PrismaClient();
+  5 |
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[01:05:55.827] Browser ERROR   ./app/api/decision/route.ts:2:1
+Module not found: Can't resolve '@prisma/client'
+  1 | import { NextRequest, NextResponse } from 'next/server';
+> 2 | import { PrismaClient } from '@prisma/client';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 |
+  4 | const prisma = new PrismaClient();
+  5 |
+
+https://nextjs.org/docs/messages/module-not-found
+[01:05:55.827] Browser ERROR   ./app/api/decision/route.ts:2:1
+Module not found: Can't resolve '@prisma/client'
+  1 | import { NextRequest, NextResponse } from 'next/server';
+> 2 | import { PrismaClient } from '@prisma/client';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 |
+  4 | const prisma = new PrismaClient();
+  5 |
+
+https://nextjs.org/docs/messages/module-not-found
