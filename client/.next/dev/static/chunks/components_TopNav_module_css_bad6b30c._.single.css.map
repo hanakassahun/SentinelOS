@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 1, "column": 0}, "map": {"version":3,"sources":["turbopack:///[project]/components/TopNav.module.css"],"sourcesContent":[".topnav {\r\n  height: var(--nav-height);\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: space-between;\r\n  padding: 0 2rem;\r\n  background: var(--color-bg);\r\n  border-bottom: var(--border);\r\n  font-family: var(--font-heading);\r\n}\r\n.left {\r\n  font-size: 1.25rem;\r\n  font-weight: 700;\r\n  letter-spacing: var(--letter-spacing-tight);\r\n  color: var(--color-text-primary);\r\n}\r\n.right {\r\n  font-size: 1rem;\r\n  color: var(--color-text-secondary);\r\n}\r\n.right a {\r\n  color: var(--color-text-secondary);\r\n  margin-left: 1.5rem;\r\n  text-decoration: none;\r\n  font-weight: 500;\r\n}\r\n.right a:hover {\r\n  color: var(--color-accent);\r\n}\r\n"],"names":[],"mappings":"AAAA;;;;;;;;;;;AAUA;;;;;;;AAMA;;;;;AAIA;;;;;;;AAMA"}}]
+}

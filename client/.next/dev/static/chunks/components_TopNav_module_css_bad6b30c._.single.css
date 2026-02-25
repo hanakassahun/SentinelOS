@@ -1,0 +1,36 @@
+/* [project]/components/TopNav.module.css [app-client] (css) */
+.TopNav-module__EpQYLW__topnav {
+  height: var(--nav-height);
+  background: var(--color-bg);
+  border-bottom: var(--border);
+  font-family: var(--font-heading);
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  display: flex;
+}
+
+.TopNav-module__EpQYLW__left {
+  letter-spacing: var(--letter-spacing-tight);
+  color: var(--color-text-primary);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.TopNav-module__EpQYLW__right {
+  color: var(--color-text-secondary);
+  font-size: 1rem;
+}
+
+.TopNav-module__EpQYLW__right a {
+  color: var(--color-text-secondary);
+  margin-left: 1.5rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.TopNav-module__EpQYLW__right a:hover {
+  color: var(--color-accent);
+}
+
+/*# sourceMappingURL=components_TopNav_module_css_bad6b30c._.single.css.map*/

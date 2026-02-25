@@ -1,0 +1,41 @@
+/* [project]/components/Timeline.module.css [app-client] (css) */
+.Timeline-module__xPkO6q__timeline {
+  border-top: var(--border);
+  border-bottom: var(--border);
+  width: 100%;
+  min-height: var(--timeline-height);
+  background: #fff;
+  align-items: center;
+  gap: 2rem;
+  padding: 1.5rem 0;
+  display: flex;
+  overflow-x: auto;
+}
+
+.Timeline-module__xPkO6q__event {
+  flex-direction: column;
+  align-items: center;
+  min-width: 100px;
+  display: flex;
+}
+
+.Timeline-module__xPkO6q__dot {
+  border-radius: 50%;
+  width: 14px;
+  height: 14px;
+  margin-bottom: .5rem;
+  transition: background .4s;
+}
+
+.Timeline-module__xPkO6q__label {
+  color: var(--color-text-secondary);
+  margin-bottom: .25rem;
+  font-size: .95rem;
+}
+
+.Timeline-module__xPkO6q__time {
+  color: #94a3b8;
+  font-size: .85rem;
+}
+
+/*# sourceMappingURL=components_Timeline_module_css_bad6b30c._.single.css.map*/

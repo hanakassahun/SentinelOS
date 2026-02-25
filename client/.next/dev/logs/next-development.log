@@ -1,1 +1,290 @@
-[00:00:00.740] Server  LOG     ✓ Ready in 521ms
+[00:00:14.315] Server  LOG     ✓ Ready in 13.8s
+[00:12:52.811] Server  ERROR   ⨯ ./components/RiskScore.tsx:1:17
+Ecmascript file had an error
+> 1 | import React, { useEffect, useRef, useState } from 'react';
+    |                 ^^^^^^^^^
+  2 | import styles from './RiskScore.module.css';
+  3 |
+  4 | type RiskLevel = 'low' | 'medium' | 'high';
+
+You're importing a component that needs `useEffect`. This React Hook only works in a Client Component. To fix, mark the file (or its parent) with the `"use client"` directive.
+
+ Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+
+
+Import trace:
+  Server Component:
+    ./components/RiskScore.tsx
+    ./features/dashboard/index.tsx
+    ./app/page.tsx
+
+
+
+./components/RiskScore.tsx:1:28
+Ecmascript file had an error
+> 1 | import React, { useEffect, useRef, useState } from 'react';
+    |                            ^^^^^^
+  2 | import styles from './RiskScore.module.css';
+  3 |
+  4 | type RiskLevel = 'low' | 'medium' | 'high';
+
+You're importing a component that needs `useRef`. This React Hook only works in a Client Component. To fix, mark the file (or its parent) with the `"use client"` directive.
+
+ Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+
+
+Import trace:
+  Server Component:
+    ./components/RiskScore.tsx
+    ./features/dashboard/index.tsx
+    ./app/page.tsx
+
+
+
+./components/RiskScore.tsx:1:36
+Ecmascript file had an error
+> 1 | import React, { useEffect, useRef, useState } from 'react';
+    |                                    ^^^^^^^^
+  2 | import styles from './RiskScore.module.css';
+  3 |
+  4 | type RiskLevel = 'low' | 'medium' | 'high';
+
+You're importing a component that needs `useState`. This React Hook only works in a Client Component. To fix, mark the file (or its parent) with the `"use client"` directive.
+
+ Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+
+
+Import trace:
+  Server Component:
+    ./components/RiskScore.tsx
+    ./features/dashboard/index.tsx
+    ./app/page.tsx
+
+
+
+./features/dashboard/index.tsx:1:17
+Ecmascript file had an error
+> 1 | import React, { useState } from 'react';
+    |                 ^^^^^^^^
+  2 | import TopNav from '../../components/TopNav';
+  3 | import Card from '../../components/Card';
+  4 | import RiskScore from '../../components/RiskScore';
+
+You're importing a component that needs `useState`. This React Hook only works in a Client Component. To fix, mark the file (or its parent) with the `"use client"` directive.
+
+ Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+
+
+Import trace:
+  Server Component:
+    ./features/dashboard/index.tsx
+    ./app/page.tsx
+
+
+[00:12:55.305] Browser ERROR   uncaughtError: Error: ./components/RiskScore.tsx:1:17
+Ecmascript file had an error
+> 1 | import React, { useEffect, useRef, useState } from 'react';
+    |                 ^^^^^^^^^
+  2 | import styles from './RiskScore.module.css';
+  3 |
+  4 | type RiskLevel = 'low' | 'medium' | 'high';
+
+You're importing a component that needs `useEffect`. This React Hook only works in a Client Component. To fix, mark the file (or its parent) with the `"use client"` directive.
+
+ Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+
+
+Import trace:
+  Server Component:
+    ./components/RiskScore.tsx
+    ./features/dashboard/index.tsx
+    ./app/page.tsx
+
+
+[00:12:55.684] Browser ERROR   ./components/RiskScore.tsx:1:17
+Ecmascript file had an error
+> 1 | import React, { useEffect, useRef, useState } from 'react';
+    |                 ^^^^^^^^^
+  2 | import styles from './RiskScore.module.css';
+  3 |
+  4 | type RiskLevel = 'low' | 'medium' | 'high';
+
+You're importing a component that needs `useEffect`. This React Hook only works in a Client Component. To fix, mark the file (or its parent) with the `"use client"` directive.
+
+ Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+Import trace:
+  Server Component:
+    ./components/RiskScore.tsx
+    ./features/dashboard/index.tsx
+    ./app/page.tsx
+[00:12:55.684] Browser ERROR   ./components/RiskScore.tsx:1:28
+Ecmascript file had an error
+> 1 | import React, { useEffect, useRef, useState } from 'react';
+    |                            ^^^^^^
+  2 | import styles from './RiskScore.module.css';
+  3 |
+  4 | type RiskLevel = 'low' | 'medium' | 'high';
+
+You're importing a component that needs `useRef`. This React Hook only works in a Client Component. To fix, mark the file (or its parent) with the `"use client"` directive.
+
+ Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+Import trace:
+  Server Component:
+    ./components/RiskScore.tsx
+    ./features/dashboard/index.tsx
+    ./app/page.tsx
+[00:12:55.684] Browser ERROR   ./components/RiskScore.tsx:1:36
+Ecmascript file had an error
+> 1 | import React, { useEffect, useRef, useState } from 'react';
+    |                                    ^^^^^^^^
+  2 | import styles from './RiskScore.module.css';
+  3 |
+  4 | type RiskLevel = 'low' | 'medium' | 'high';
+
+You're importing a component that needs `useState`. This React Hook only works in a Client Component. To fix, mark the file (or its parent) with the `"use client"` directive.
+
+ Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+Import trace:
+  Server Component:
+    ./components/RiskScore.tsx
+    ./features/dashboard/index.tsx
+    ./app/page.tsx
+[00:12:55.684] Browser ERROR   ./features/dashboard/index.tsx:1:17
+Ecmascript file had an error
+> 1 | import React, { useState } from 'react';
+    |                 ^^^^^^^^
+  2 | import TopNav from '../../components/TopNav';
+  3 | import Card from '../../components/Card';
+  4 | import RiskScore from '../../components/RiskScore';
+
+You're importing a component that needs `useState`. This React Hook only works in a Client Component. To fix, mark the file (or its parent) with the `"use client"` directive.
+
+ Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+Import trace:
+  Server Component:
+    ./features/dashboard/index.tsx
+    ./app/page.tsx
+[00:12:56.720] Browser ERROR   ./components/RiskScore.tsx:1:17
+Ecmascript file had an error
+> 1 | import React, { useEffect, useRef, useState } from 'react';
+    |                 ^^^^^^^^^
+  2 | import styles from './RiskScore.module.css';
+  3 |
+  4 | type RiskLevel = 'low' | 'medium' | 'high';
+
+You're importing a component that needs `useEffect`. This React Hook only works in a Client Component. To fix, mark the file (or its parent) with the `"use client"` directive.
+
+ Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+Import trace:
+  Server Component:
+    ./components/RiskScore.tsx
+    ./features/dashboard/index.tsx
+    ./app/page.tsx
+[00:12:56.720] Browser ERROR   ./components/RiskScore.tsx:1:28
+Ecmascript file had an error
+> 1 | import React, { useEffect, useRef, useState } from 'react';
+    |                            ^^^^^^
+  2 | import styles from './RiskScore.module.css';
+  3 |
+  4 | type RiskLevel = 'low' | 'medium' | 'high';
+
+You're importing a component that needs `useRef`. This React Hook only works in a Client Component. To fix, mark the file (or its parent) with the `"use client"` directive.
+
+ Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+Import trace:
+  Server Component:
+    ./components/RiskScore.tsx
+    ./features/dashboard/index.tsx
+    ./app/page.tsx
+[00:12:56.720] Browser ERROR   ./components/RiskScore.tsx:1:36
+Ecmascript file had an error
+> 1 | import React, { useEffect, useRef, useState } from 'react';
+    |                                    ^^^^^^^^
+  2 | import styles from './RiskScore.module.css';
+  3 |
+  4 | type RiskLevel = 'low' | 'medium' | 'high';
+
+You're importing a component that needs `useState`. This React Hook only works in a Client Component. To fix, mark the file (or its parent) with the `"use client"` directive.
+
+ Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+Import trace:
+  Server Component:
+    ./components/RiskScore.tsx
+    ./features/dashboard/index.tsx
+    ./app/page.tsx
+[00:12:56.720] Browser ERROR   ./features/dashboard/index.tsx:1:17
+Ecmascript file had an error
+> 1 | import React, { useState } from 'react';
+    |                 ^^^^^^^^
+  2 | import TopNav from '../../components/TopNav';
+  3 | import Card from '../../components/Card';
+  4 | import RiskScore from '../../components/RiskScore';
+
+You're importing a component that needs `useState`. This React Hook only works in a Client Component. To fix, mark the file (or its parent) with the `"use client"` directive.
+
+ Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+Import trace:
+  Server Component:
+    ./features/dashboard/index.tsx
+    ./app/page.tsx
+[00:13:32.125] Browser ERROR   ./features/dashboard/index.tsx:1:17
+Ecmascript file had an error
+> 1 | import React, { useState } from 'react';
+    |                 ^^^^^^^^
+  2 | import TopNav from '../../components/TopNav';
+  3 | import Card from '../../components/Card';
+  4 | import RiskScore from '../../components/RiskScore';
+
+You're importing a component that needs `useState`. This React Hook only works in a Client Component. To fix, mark the file (or its parent) with the `"use client"` directive.
+
+ Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+Import trace:
+  Server Component:
+    ./features/dashboard/index.tsx
+    ./app/page.tsx
+[00:13:47.123] Browser ERROR   ./features/dashboard/index.tsx:1:17
+Ecmascript file had an error
+> 1 | import React, { useState } from 'react';
+    |                 ^^^^^^^^
+  2 | import TopNav from '../../components/TopNav';
+  3 | import Card from '../../components/Card';
+  4 | import RiskScore from '../../components/RiskScore';
+
+You're importing a component that needs `useState`. This React Hook only works in a Client Component. To fix, mark the file (or its parent) with the `"use client"` directive.
+
+ Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+Import trace:
+  Server Component:
+    ./features/dashboard/index.tsx
+    ./app/page.tsx
+[00:14:10.127] Browser ERROR   ./features/dashboard/index.tsx:1:17
+Ecmascript file had an error
+> 1 | import React, { useState } from 'react';
+    |                 ^^^^^^^^
+  2 | import TopNav from '../../components/TopNav';
+  3 | import Card from '../../components/Card';
+  4 | import RiskScore from '../../components/RiskScore';
+
+You're importing a component that needs `useState`. This React Hook only works in a Client Component. To fix, mark the file (or its parent) with the `"use client"` directive.
+
+ Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+Import trace:
+  Server Component:
+    ./features/dashboard/index.tsx
+    ./app/page.tsx

@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 1, "column": 0}, "map": {"version":3,"sources":["turbopack:///[project]/components/Loader.module.css"],"sourcesContent":[".loader {\r\n  width: 100%;\r\n  height: 4px;\r\n  background: #e0e7ef;\r\n  border-radius: 2px;\r\n  overflow: hidden;\r\n  margin: 1rem 0;\r\n}\r\n.bar {\r\n  height: 100%;\r\n  width: 0%;\r\n  background: var(--color-accent);\r\n  animation: loader-bar 1.2s cubic-bezier(0.22, 1, 0.36, 1) infinite;\r\n}\r\n@keyframes loader-bar {\r\n  0% { width: 0%; }\r\n  60% { width: 80%; }\r\n  100% { width: 0%; }\r\n}\r\n"],"names":[],"mappings":"AAAA;;;;;;;;;AAQA;;;;;;;AAMA"}}]
+}
