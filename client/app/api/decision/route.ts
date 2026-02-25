@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
         : 'No critical threats identified.',
     ];
     // Store in Prisma
-    const decision = await prisma.decision.create({
+    const decision = await prisma.decisions.create({
       data: {
         description,
         tags,
@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
 
 export async function GET() {
   try {
-    const decisions = await prisma.decision.findMany({
+    const decisions = await prisma.decisions.findMany({
       orderBy: { createdAt: 'desc' },
       take: 5,
     });

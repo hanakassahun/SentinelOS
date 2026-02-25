@@ -1,4 +1,4 @@
-model Decision {
+model decision {
   id          Int      @id @default(autoincrement())
   description String
   tags        String?
@@ -15,7 +15,7 @@ model Decision {
 
 generator client {
   provider = "prisma-client"
-  output   = "../generated/prisma"
+  // removed output 
 }
 
 datasource db {
