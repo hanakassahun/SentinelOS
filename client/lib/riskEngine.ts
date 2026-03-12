@@ -8,6 +8,7 @@ export interface RiskEvaluationInput {
 export interface RiskEvaluationOutput {
   riskScore: number;
   warnings: string[];
+  explanations: string[];
   recommendedAlternative?: string;
   explainability: string;
   categoryScores?: Record<string, number>;
@@ -37,9 +38,9 @@ export function evaluateRisk(
     .sort((a, b) => b.sim - a.sim)
     .slice(0, 5);
 
-  // Calculate risk factors
   let riskScore = 0;
   let warnings: string[] = [];
+  let explanations: string[] = [];
   let categoryScores: Record<string, number> = {};
 
   // Similar past failures
@@ -47,12 +48,14 @@ export function evaluateRisk(
   if (failures.length) {
     riskScore += failures.length * 15;
     warnings.push('Similar past actions resulted in failure.');
+    explanations.push('Similar decisions previously resulted in burnout or regret.');
   }
 
   // Sleep deficit
   if (input.context.sleep !== undefined && input.context.sleep < 6) {
     riskScore += 20;
     warnings.push('Sleep deficit detected.');
+    explanations.push('You historically underperform when sleeping under 6 hours.');
     categoryScores['physical'] = 20;
   }
 
@@ -60,6 +63,7 @@ export function evaluateRisk(
   if (input.context.active_projects !== undefined && input.context.active_projects > 3) {
     riskScore += 15;
     warnings.push('Too many active projects.');
+    explanations.push('Managing more than 3 active projects increases your risk.');
     categoryScores['execution'] = 15;
   }
 
@@ -67,6 +71,7 @@ export function evaluateRisk(
   if (input.context.stress !== undefined && input.context.stress > 7) {
     riskScore += 20;
     warnings.push('High stress level.');
+    explanations.push('High stress levels are linked to poor outcomes.');
     categoryScores['emotional'] = 20;
   }
 
@@ -74,6 +79,7 @@ export function evaluateRisk(
   if (input.context.emotion !== undefined && input.context.emotion === 'regret') {
     riskScore += 10;
     warnings.push('Negative emotional state.');
+    explanations.push('Negative emotional state increases risk of poor decisions.');
     categoryScores['emotional'] = (categoryScores['emotional'] || 0) + 10;
   }
 
@@ -81,6 +87,7 @@ export function evaluateRisk(
   if (input.context.productivity_drop !== undefined && input.context.productivity_drop > 2) {
     riskScore += 10;
     warnings.push('Recent productivity drop.');
+    explanations.push('Recent productivity drop signals increased risk.');
     categoryScores['execution'] = (categoryScores['execution'] || 0) + 10;
   }
 
@@ -94,8 +101,8 @@ export function evaluateRisk(
   // Explainability
   const explainability = `Risk factors: ${warnings.join(' | ')}`;
 
-  // Confidence (dummy)
-  const confidence = 1 - riskScore / 100;
+  // Confidence: number of similar events
+  const confidence = similar.length;
 
   // Active risk load (dummy)
   const activeRiskLoad = riskScore;
@@ -103,6 +110,7 @@ export function evaluateRisk(
   return {
     riskScore,
     warnings,
+    explanations,
     recommendedAlternative,
     explainability,
     categoryScores,
