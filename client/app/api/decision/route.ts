@@ -1,6 +1,7 @@
 export const runtime = "node";
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
+import { evaluateRisk, RiskEvaluationInput } from '../../lib/riskEngine';
 
 const prisma = new PrismaClient();
 
@@ -61,5 +62,34 @@ export async function GET() {
     );
   } catch (e) {
     return NextResponse.json({ error: 'Failed to fetch decisions.' }, { status: 500 });
+  }
+}
+
+export async function POST_EVALUATE(req: NextRequest) {
+  try {
+    const { action, context } = await req.json();
+    // Fetch past decisions from DB
+    const pastDecisions = await prisma.decisionLog.findMany({
+      orderBy: { createdAt: 'desc' },
+      take: 50,
+    });
+    // Evaluate risk
+    const riskResult = evaluateRisk({ action, context }, pastDecisions);
+    // Store new decision
+    const newDecision = await prisma.decisionLog.create({
+      data: {
+        action,
+        context,
+        outcome: 'pending',
+        productivityDrop: context.productivity_drop || 0,
+      },
+    });
+    return NextResponse.json({
+      id: newDecision.id,
+      ...riskResult,
+      createdAt: newDecision.createdAt,
+    });
+  } catch (e) {
+    return NextResponse.json({ error: 'Failed to evaluate decision', details: String(e) }, { status: 500 });
   }
 }
