@@ -1,3 +1,44 @@
+// Confidence score summary
+function getConfidenceSummary(similarCount: number): string {
+  if (similarCount === 0) return 'No similar events found. Low confidence.';
+  if (similarCount < 3) return `Few similar events found (${similarCount}). Moderate confidence.`;
+  return `Several similar events found (${similarCount}). High confidence in risk estimate.`;
+}
+// Pattern Drift Detection: compare current context to past "bad" phases
+function detectPatternDrift(currentContext: Record<string, any>, pastDecisions: DecisionLog[]): { driftScore: number; driftDetected: boolean; summary: string } {
+  // Define "bad" phases as past decisions with negative outcome
+  const badPhases = pastDecisions.filter(d => d.outcome !== 'success');
+  if (badPhases.length === 0) {
+    return { driftScore: 0, driftDetected: false, summary: 'No bad phases in history.' };
+  }
+  // Compare current context to each bad phase context using similarity
+  let maxDrift = 0;
+  for (const bad of badPhases) {
+    const sim = similarity(currentContext, bad.context);
+    if (sim > maxDrift) maxDrift = sim;
+  }
+  // Heuristic: if similarity to any bad phase is high (e.g., >= 3), flag drift
+  const driftDetected = maxDrift >= 3;
+  const summary = driftDetected
+    ? `Current context is similar to a past bad phase (similarity: ${maxDrift}). Pattern drift detected!`
+    : 'No significant pattern drift detected.';
+  return { driftScore: maxDrift, driftDetected, summary };
+}
+// Heuristic-based future self simulation
+function simulateFutureOutcome(riskScore: number, context: Record<string, any>): { successProb: number; failProb: number; neutralProb: number; summary: string } {
+  // Simple heuristic: higher riskScore means lower success probability
+  // You can expand this logic with more context features as needed
+  let successProb = Math.max(0, 1 - riskScore / 100);
+  let failProb = Math.min(1, riskScore / 100 * 0.8); // up to 80% fail at max risk
+  let neutralProb = 1 - successProb - failProb;
+  // Clamp
+  successProb = Math.max(0, Math.min(1, successProb));
+  failProb = Math.max(0, Math.min(1, failProb));
+  neutralProb = Math.max(0, Math.min(1, neutralProb));
+  // Human-readable summary
+  let summary = `If you proceed, estimated chance of success: ${(successProb*100).toFixed(0)}%, failure: ${(failProb*100).toFixed(0)}%, neutral: ${(neutralProb*100).toFixed(0)}%.`;
+  return { successProb, failProb, neutralProb, summary };
+}
 import { DecisionLog } from '../../types';
 
 export interface RiskEvaluationInput {
@@ -155,6 +196,12 @@ export function evaluateRisk(
     if (categoryScores[cat] === 0) delete categoryScores[cat];
   });
 
+  // Future self simulation (heuristic-based outcome probabilities)
+  const futureSimulation = simulateFutureOutcome(riskScore, input.context);
+
+  // Pattern drift detection
+  const patternDrift = detectPatternDrift(input.context, pastDecisions);
+
   // Recommended alternative (dummy)
   let recommendedAlternative = undefined;
   if (riskScore > 60) recommendedAlternative = 'Delay action or reduce workload.';
@@ -164,6 +211,7 @@ export function evaluateRisk(
 
   // Confidence: number of similar events
   const confidence = similar.length;
+  const confidenceSummary = getConfidenceSummary(confidence);
 
   // Active risk load (dummy)
   const activeRiskLoad = riskScore;
@@ -176,6 +224,9 @@ export function evaluateRisk(
     explainability,
     categoryScores,
     confidence,
+    confidenceSummary,
     activeRiskLoad,
+    futureSimulation,
+    patternDrift,
   };
 }
