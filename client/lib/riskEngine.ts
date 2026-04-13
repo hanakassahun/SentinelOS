@@ -27,6 +27,49 @@ function similarity(a: any, b: any): number {
   return score;
 }
 
+
+function getSleepExplanation(sleep: number | undefined): string | undefined {
+  if (sleep !== undefined && sleep < 6) {
+    return 'You historically underperform when sleeping under 6 hours.';
+  }
+  return undefined;
+}
+
+function getActiveProjectsExplanation(activeProjects: number | undefined): string | undefined {
+  if (activeProjects !== undefined && activeProjects > 3) {
+    return 'Managing more than 3 active projects increases your risk.';
+  }
+  return undefined;
+}
+
+function getStressExplanation(stress: number | undefined): string | undefined {
+  if (stress !== undefined && stress > 7) {
+    return 'High stress levels are linked to poor outcomes.';
+  }
+  return undefined;
+}
+
+function getEmotionExplanation(emotion: string | undefined): string | undefined {
+  if (emotion !== undefined && emotion === 'regret') {
+    return 'Negative emotional state increases risk of poor decisions.';
+  }
+  return undefined;
+}
+
+function getProductivityDropExplanation(productivityDrop: number | undefined): string | undefined {
+  if (productivityDrop !== undefined && productivityDrop > 2) {
+    return 'Recent productivity drop signals increased risk.';
+  }
+  return undefined;
+}
+
+function getSimilarFailuresExplanation(hasFailures: boolean): string | undefined {
+  if (hasFailures) {
+    return 'Similar decisions previously resulted in burnout or regret.';
+  }
+  return undefined;
+}
+
 export function evaluateRisk(
   input: RiskEvaluationInput,
   pastDecisions: DecisionLog[]
@@ -41,58 +84,76 @@ export function evaluateRisk(
   let riskScore = 0;
   let warnings: string[] = [];
   let explanations: string[] = [];
-  let categoryScores: Record<string, number> = {};
+  // Modular category profiling
+  let categoryScores: Record<string, number> = {
+    physical: 0,
+    execution: 0,
+    emotional: 0,
+    // Add more categories as needed
+  };
 
   // Similar past failures
   const failures = similar.filter(x => x.d.outcome !== 'success');
   if (failures.length) {
     riskScore += failures.length * 15;
     warnings.push('Similar past actions resulted in failure.');
-    explanations.push('Similar decisions previously resulted in burnout or regret.');
+    const exp = getSimilarFailuresExplanation(true);
+    if (exp) explanations.push(exp);
+    // Assign to a general or custom category if desired
+    categoryScores['execution'] += failures.length * 15;
   }
 
   // Sleep deficit
   if (input.context.sleep !== undefined && input.context.sleep < 6) {
     riskScore += 20;
     warnings.push('Sleep deficit detected.');
-    explanations.push('You historically underperform when sleeping under 6 hours.');
-    categoryScores['physical'] = 20;
+    const exp = getSleepExplanation(input.context.sleep);
+    if (exp) explanations.push(exp);
+    categoryScores['physical'] += 20;
   }
 
   // Overcommitment
   if (input.context.active_projects !== undefined && input.context.active_projects > 3) {
     riskScore += 15;
     warnings.push('Too many active projects.');
-    explanations.push('Managing more than 3 active projects increases your risk.');
-    categoryScores['execution'] = 15;
+    const exp = getActiveProjectsExplanation(input.context.active_projects);
+    if (exp) explanations.push(exp);
+    categoryScores['execution'] += 15;
   }
 
   // Stress level
   if (input.context.stress !== undefined && input.context.stress > 7) {
     riskScore += 20;
     warnings.push('High stress level.');
-    explanations.push('High stress levels are linked to poor outcomes.');
-    categoryScores['emotional'] = 20;
+    const exp = getStressExplanation(input.context.stress);
+    if (exp) explanations.push(exp);
+    categoryScores['emotional'] += 20;
   }
 
   // Emotional state
   if (input.context.emotion !== undefined && input.context.emotion === 'regret') {
     riskScore += 10;
     warnings.push('Negative emotional state.');
-    explanations.push('Negative emotional state increases risk of poor decisions.');
-    categoryScores['emotional'] = (categoryScores['emotional'] || 0) + 10;
+    const exp = getEmotionExplanation(input.context.emotion);
+    if (exp) explanations.push(exp);
+    categoryScores['emotional'] += 10;
   }
 
   // Productivity drop
   if (input.context.productivity_drop !== undefined && input.context.productivity_drop > 2) {
     riskScore += 10;
     warnings.push('Recent productivity drop.');
-    explanations.push('Recent productivity drop signals increased risk.');
-    categoryScores['execution'] = (categoryScores['execution'] || 0) + 10;
+    const exp = getProductivityDropExplanation(input.context.productivity_drop);
+    if (exp) explanations.push(exp);
+    categoryScores['execution'] += 10;
   }
 
   // Clamp risk score
   riskScore = Math.min(100, riskScore);
+  // Remove zero categories for cleaner output
+  Object.keys(categoryScores).forEach(cat => {
+    if (categoryScores[cat] === 0) delete categoryScores[cat];
+  });
 
   // Recommended alternative (dummy)
   let recommendedAlternative = undefined;
