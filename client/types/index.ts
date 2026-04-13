@@ -1,3 +1,32 @@
+// RiskEvaluationInput for risk engine
+export interface RiskEvaluationInput {
+  action: string;
+  context: Record<string, any>;
+  override?: boolean;
+  userReasoning?: string;
+}
+// DecisionLog type for risk engine
+export interface DecisionLog {
+  id: string;
+  context: Record<string, any>;
+  outcome: 'success' | 'fail' | 'burnout' | 'regret' | string;
+  timestamp?: string;
+  [key: string]: any;
+}
+
+export interface RiskEvaluationOutput {
+  riskScore: number;
+  warnings: string[];
+  explanations: string[];
+  recommendedAlternative?: string;
+  explainability: string;
+  categoryScores?: Record<string, number>;
+  futureSimulation?: any;
+  confidence?: number;
+  confidenceSummary?: string;
+  activeRiskLoad?: number;
+  patternDrift?: any;
+}
 export enum BehaviorType {
   ENERGY = 'ENERGY',
   MOOD = 'MOOD',

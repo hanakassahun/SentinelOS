@@ -5,41 +5,52 @@ import { evaluateRisk, RiskEvaluationInput } from '../../lib/riskEngine';
 
 const prisma = new PrismaClient();
 
-export async function POST(req: NextRequest) {
   try {
-    const { description, tags } = await req.json();
-    // Run risk logic (placeholder)
-    const riskScore = Math.floor(Math.random() * 100);
+    const { action, context, description, tags, override, userReasoning } = await req.json();
+    // Fetch past decisions for context-aware risk evaluation
+    const pastDecisions = await prisma.decisionLog.findMany({
+      orderBy: { createdAt: 'desc' },
+      take: 50,
+    });
+    // Evaluate risk using advanced engine
+    const riskResult = evaluateRisk({ action, context, override, userReasoning }, pastDecisions);
+    // Determine riskLevel
     let riskLevel: 'low' | 'medium' | 'high' = 'low';
-    if (riskScore >= 70) riskLevel = 'high';
-    else if (riskScore >= 40) riskLevel = 'medium';
-    const explanationArr = [
-      'Analyzed behavioral patterns for anomalies.',
-      riskLevel === 'high'
-        ? 'High risk detected due to recent activity.'
-        : riskLevel === 'medium'
-        ? 'Detected moderate risk due to recent activity.'
-        : 'No critical threats identified.',
-    ];
+    if (riskResult.riskScore >= 70) riskLevel = 'high';
+    else if (riskResult.riskScore >= 40) riskLevel = 'medium';
     // Store in Prisma
     const decision = await prisma.decisions.create({
       data: {
         description,
         tags,
-        riskScore,
+        riskScore: riskResult.riskScore,
         riskLevel,
-        explanation: JSON.stringify(explanationArr),
+        explanation: JSON.stringify(riskResult.explanations),
+        categoryScores: JSON.stringify(riskResult.categoryScores),
+        futureSimulation: JSON.stringify(riskResult.futureSimulation),
+        confidence: riskResult.confidence,
+        confidenceSummary: riskResult.confidenceSummary,
+        patternDrift: JSON.stringify(riskResult.patternDrift),
+        override,
+        userReasoning,
       },
     });
     return NextResponse.json({
       id: decision.id,
-      riskScore,
+      riskScore: riskResult.riskScore,
       riskLevel,
-      explanation: explanationArr,
+      explanations: riskResult.explanations,
+      categoryScores: riskResult.categoryScores,
+      futureSimulation: riskResult.futureSimulation,
+      confidence: riskResult.confidence,
+      confidenceSummary: riskResult.confidenceSummary,
+      patternDrift: riskResult.patternDrift,
+      override,
+      userReasoning,
       createdAt: decision.createdAt,
     });
   } catch (e) {
-    return NextResponse.json({ error: 'Failed to process decision.' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to process decision.', details: String(e) }, { status: 500 });
   }
 }
 

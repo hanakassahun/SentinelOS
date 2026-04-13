@@ -39,24 +39,12 @@ function simulateFutureOutcome(riskScore: number, context: Record<string, any>):
   let summary = `If you proceed, estimated chance of success: ${(successProb*100).toFixed(0)}%, failure: ${(failProb*100).toFixed(0)}%, neutral: ${(neutralProb*100).toFixed(0)}%.`;
   return { successProb, failProb, neutralProb, summary };
 }
-import { DecisionLog } from '../../types';
+import { DecisionLog, RiskEvaluationOutput, RiskEvaluationInput } from '../types';
 
-export interface RiskEvaluationInput {
-  action: string;
-  context: Record<string, any>;
-}
 
-export interface RiskEvaluationOutput {
-  riskScore: number;
-  warnings: string[];
-  explanations: string[];
-  recommendedAlternative?: string;
-  explainability: string;
-  categoryScores?: Record<string, number>;
-  futureSimulation?: any;
-  confidence?: number;
-  activeRiskLoad?: number;
-}
+
+
+
 
 // Dummy similarity function
 function similarity(a: any, b: any): number {
