@@ -1,6 +1,6 @@
 import { evaluateRisk } from '../lib/riskEngine';
 import { RiskEvaluationInput, RiskEvaluationOutput, DecisionLog } from '../types';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../../../node_modules/.prisma/client';
 
 const prisma = new PrismaClient();
 

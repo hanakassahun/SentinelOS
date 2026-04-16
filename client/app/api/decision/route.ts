@@ -1,7 +1,7 @@
 export const runtime = "node";
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
-import { evaluateRisk, RiskEvaluationInput } from '../../lib/riskEngine';
+import { evaluateRisk, RiskEvaluationInput } from '../../lib/riskEngine.ts';
 
 const prisma = new PrismaClient();
 
