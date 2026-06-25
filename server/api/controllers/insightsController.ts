@@ -4,6 +4,10 @@ import { analyzeEnergy } from '../../../intelligence/energyAnalyzer';
 import { generateEnergyInsights } from '../../../intelligence/insightGenerator';
 import { getLogs } from '../../services/insightsService';
 import { generateInsightsFromLogs } from '../../../internal/intelligence/insightGenerator';
+import {
+  buildInsightsFromAnalytics,
+  getBehaviorAnalytics,
+} from '../../services/analyticsService';
 
 // Simple in-memory cache for analysis/insights (per-process). Cached for 24h by default.
 let cached: { ts: number; insights: any[]; analysis: any } | null = null;
@@ -17,7 +21,6 @@ export async function getInsights(_req: Request, res: Response) {
     const force = _req.query && String(_req.query.force) === 'true';
     if (!force) {
       const persisted = await prisma.insight.findFirst({
-        where: { behaviorType: 'ENERGY' },
         orderBy: { generatedAt: 'desc' },
       });
       if (persisted) {
@@ -40,9 +43,8 @@ export async function getInsights(_req: Request, res: Response) {
       // persist empty result briefly to avoid repeated cheap requests
       await prisma.insight.create({
         data: {
-          behaviorType: 'ENERGY',
-          insights: [],
-          analysis: { totalLogs: logs ? logs.length : 0 },
+          insights: [] as any,
+          analysis: { totalLogs: logs ? logs.length : 0 } as any,
         },
       });
       cached = { ts: Date.now(), insights: [], analysis: { totalLogs: logs ? logs.length : 0 } };
@@ -56,9 +58,8 @@ export async function getInsights(_req: Request, res: Response) {
     // Persist generated insights (cache)
     await prisma.insight.create({
       data: {
-        behaviorType: 'ENERGY',
-        insights,
-        analysis,
+        insights: insights as any,
+        analysis: analysis as any,
       },
     });
 
@@ -83,7 +84,7 @@ export async function listPersistedInsights(_req: Request, res: Response) {
 
 export async function deleteInsight(req: Request, res: Response) {
   try {
-    const { id } = req.params;
+    const id = String(req.params.id);
     await prisma.insight.delete({ where: { id } });
     res.json({ ok: true });
   } catch (err) {
@@ -108,8 +109,24 @@ export async function refreshInsights(_req: Request, res: Response) {
 
 export async function getInsightsSimple(_req: Request, res: Response) {
   try {
-    const logs = await getLogs();
-    const report = generateInsightsFromLogs(logs);
+    const sinceAnalytics = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const analytics = await getBehaviorAnalytics({ behaviorType: 'ENERGY', since: sinceAnalytics });
+    const insights = buildInsightsFromAnalytics(analytics);
+
+    const recentSince = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    const recentLogs = await prisma.log.findMany({
+      where: { behaviorType: 'ENERGY', timestamp: { gte: recentSince } },
+      orderBy: { timestamp: 'asc' },
+    });
+
+    const report = {
+      analysis: analytics,
+      insights,
+      explainableGuidance: insights.map((item) => ({ message: item.message })),
+      weeklyRecommendations: [],
+      logs: recentLogs,
+    };
+
     res.json(report);
   } catch (err) {
     console.error(err);
