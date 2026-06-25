@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only scripts/start_dev_server.ts",
     "start": "node dist/server/app.js",
+    "test:analytics": "ts-node scripts/test_analytics_service.ts",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev"
   },

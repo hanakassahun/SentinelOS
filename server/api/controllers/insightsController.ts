@@ -43,6 +43,9 @@ export async function getInsights(_req: Request, res: Response) {
       // persist empty result briefly to avoid repeated cheap requests
       await prisma.insight.create({
         data: {
+          type: 'TREND',
+          message: 'Cached empty insight result',
+          priority: 'low',
           insights: [] as any,
           analysis: { totalLogs: logs ? logs.length : 0 } as any,
         },
@@ -58,6 +61,9 @@ export async function getInsights(_req: Request, res: Response) {
     // Persist generated insights (cache)
     await prisma.insight.create({
       data: {
+        type: 'TREND',
+        message: 'Cached generated energy insights',
+        priority: 'low',
         insights: insights as any,
         analysis: analysis as any,
       },
