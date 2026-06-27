@@ -1,14 +1,10 @@
-// Prisma schema for PostgreSQL
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "sqlite"
-  url      = "file:../dev.db"
 }
-
 
 model BehavioralEvent {
   id          String   @id @default(uuid())
@@ -30,15 +26,16 @@ model Log {
   behaviorType  BehaviorType
   value         Int
   expectedValue Int?
+  outcome       String?      @default("success")
   timestamp     DateTime
   timezone      String?
   note          String?
   createdAt     DateTime     @default(now())
   tags          LogTag[]
-  
+
   @@index([userId, createdAt])
-// removed extra closing brace
-// Move enums to the end
+}
+
 enum BehaviorType {
   ENERGY
   MOOD
@@ -65,32 +62,30 @@ model LogTag {
 
   @@id([logId, tagId])
 }
-}
 
 model DecisionLog {
-  id            String   @id @default(uuid())
-  userId        String?
-  action        String
-  context       Json
-  outcome       String
+  id               String   @id @default(uuid())
+  userId           String?
+  action           String
+  context          Json
+  outcome          String
   productivityDrop Int?
-  createdAt     DateTime @default(now())
+  createdAt        DateTime @default(now())
 }
 
-
 model Insight {
-  id           String    @id @default(uuid())
-  userId       String?
-  user         User?      @relation(fields: [userId], references: [id])
-  type         InsightType
-  message      String
+  id             String       @id @default(uuid())
+  userId         String?
+  user           User?        @relation(fields: [userId], references: [id])
+  type           InsightType
+  message        String
   recommendation String?
-  priority     String
-  confidence   Float?
-  insights     Json
-  analysis     Json
-  generatedAt  DateTime    @default(now())
-  createdAt    DateTime    @default(now())
+  priority       String
+  confidence     Float?
+  insights       Json
+  analysis       Json
+  generatedAt    DateTime     @default(now())
+  createdAt      DateTime     @default(now())
 
   @@index([userId, generatedAt])
 }

@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import prisma from './prismaClient';
 
 const TIME_BLOCKS = [
@@ -48,28 +48,32 @@ function getHourExpression(provider: SqlProvider): string {
   if (provider === 'postgres') {
     return 'EXTRACT(hour FROM "timestamp")';
   }
-  return 'CAST(strftime("%H", "timestamp") AS INTEGER)';
+  return 'CAST(strftime(\'%H\', "timestamp") AS INTEGER)';
 }
 
 function getDateBucketExpression(provider: SqlProvider): string {
   if (provider === 'postgres') {
     return 'TO_CHAR("timestamp", \'YYYY-MM-DD\')';
   }
-  return 'strftime("%Y-%m-%d", "timestamp")';
+  return 'strftime(\'%Y-%m-%d\', "timestamp")';
 }
 
 function buildTagFilter(tagNames?: string[]) {
-  if (!tagNames || tagNames.length === 0) return Prisma.empty;
+  if (!tagNames || tagNames.length === 0) {
+    return { clause: '', params: [] as string[] };
+  }
 
-  return Prisma.sql`
-    AND EXISTS (
+  const placeholders = tagNames.map(() => '?').join(', ');
+  return {
+    clause: `AND EXISTS (
       SELECT 1
       FROM "LogTag" lt
       JOIN "Tag" t ON t.id = lt."tagId"
       WHERE lt."logId" = "Log".id
-        AND t.name IN (${Prisma.join(tagNames)})
-    )
-  `;
+        AND t.name IN (${placeholders})
+    )`,
+    params: tagNames,
+  };
 }
 
 export async function getBehaviorAnalytics(options: {
@@ -91,48 +95,71 @@ export async function getBehaviorAnalytics(options: {
   const hourExpr = getHourExpression(provider);
   const dayBucket = getDateBucketExpression(provider);
 
-  const baseWhere = Prisma.sql`
-    "behaviorType" = ${behaviorType}
-    AND "outcome" IN ('success', 'fail')
-    ${userId ? Prisma.sql`AND "userId" = ${userId}` : Prisma.empty}
-    ${since ? Prisma.sql`AND "timestamp" >= ${since.toISOString()}` : Prisma.empty}
-    ${buildTagFilter(tagNames)}
-  `;
+  const tagFilter = buildTagFilter(tagNames);
+  const whereFragments = [
+    `"behaviorType" = ?`,
+    `"outcome" IN ('success', 'fail')`,
+  ];
+  const params: (string | number)[] = [behaviorType];
 
-  const timeBlockRows = await prisma.$queryRaw<Array<{ timeBlock: string; total: number; successes: number }>>(
-    Prisma.sql`
+  if (userId) {
+    whereFragments.push(`"userId" = ?`);
+    params.push(userId);
+  }
+
+  if (since) {
+    whereFragments.push(`"timestamp" >= ?`);
+    params.push(since.toISOString());
+  }
+
+  if (tagFilter.clause) {
+    whereFragments.push(tagFilter.clause);
+    params.push(...tagFilter.params);
+  }
+
+  const whereClause = whereFragments.join(' AND ');
+
+  const timeBlockSql = `
       SELECT
         CASE
-          WHEN ${Prisma.raw(hourExpr)} >= 0 AND ${Prisma.raw(hourExpr)} < 6 THEN 'Night'
-          WHEN ${Prisma.raw(hourExpr)} >= 6 AND ${Prisma.raw(hourExpr)} < 12 THEN 'Morning'
-          WHEN ${Prisma.raw(hourExpr)} >= 12 AND ${Prisma.raw(hourExpr)} < 17 THEN 'Afternoon'
-          WHEN ${Prisma.raw(hourExpr)} >= 17 AND ${Prisma.raw(hourExpr)} < 21 THEN 'Evening'
+          WHEN ${hourExpr} >= 0 AND ${hourExpr} < 6 THEN 'Night'
+          WHEN ${hourExpr} >= 6 AND ${hourExpr} < 12 THEN 'Morning'
+          WHEN ${hourExpr} >= 12 AND ${hourExpr} < 17 THEN 'Afternoon'
+          WHEN ${hourExpr} >= 17 AND ${hourExpr} < 21 THEN 'Evening'
           ELSE 'Late'
         END AS "timeBlock",
         COUNT(*) AS "total",
         SUM(CASE WHEN "outcome" = 'success' THEN 1 ELSE 0 END) AS "successes"
       FROM "Log"
-      WHERE ${baseWhere}
+      WHERE ${whereClause}
       GROUP BY "timeBlock"
       ORDER BY "total" DESC
-    `,
+    `;
+
+  const timeBlockRows = await prisma.$queryRawUnsafe<Array<{ timeBlock: string; total: number; successes: number }>>(
+    timeBlockSql,
+    ...params,
   );
 
-  const clusterRows = await prisma.$queryRaw<Array<{ day: string; count: number; start: string; end: string }>>(
-    Prisma.sql`
+  const clusterSql = `
       SELECT
-        ${Prisma.raw(dayBucket)} AS "day",
+        ${dayBucket} AS "day",
         COUNT(*) AS "count",
         MIN("timestamp") AS "start",
         MAX("timestamp") AS "end"
       FROM "Log"
-      WHERE ${baseWhere}
+      WHERE ${whereClause}
         AND "outcome" = 'fail'
       GROUP BY "day"
-      HAVING COUNT(*) >= ${minFailureClusterSize}
+      HAVING COUNT(*) >= ?
       ORDER BY "count" DESC, "day" DESC
       LIMIT 5
-    `,
+    `;
+
+  const clusterRows = await prisma.$queryRawUnsafe<Array<{ day: string; count: number; start: string; end: string }>>(
+    clusterSql,
+    ...params,
+    minFailureClusterSize,
   );
 
   const timeBlockStats = TIME_BLOCKS.map((block) => {

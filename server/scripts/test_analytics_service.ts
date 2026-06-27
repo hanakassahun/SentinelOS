@@ -15,11 +15,9 @@ import { getBehaviorAnalytics } from '../services/analyticsService';
     console.log('Failure clusters:', analytics.failureClusters);
     process.exit(0);
   } catch (error: any) {
+    console.error('Analytics service test failed:', error);
     if (error.code === 'P2010') {
-      console.error('Analytics service test failed because the database schema is not initialized.');
-      console.error('Please run Prisma migrations or seed the database before retrying.');
-    } else {
-      console.error('Analytics service test failed:', error);
+      console.error('Detected Prisma error code P2010: schema/table access issue.');
     }
     process.exit(1);
   }
