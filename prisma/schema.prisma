@@ -3,22 +3,40 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
+}
+
+model User {
+  id               String            @id @default(uuid())
+  email            String            @unique
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  logs             Log[]
+  insights         Insight[]
+  behavioralEvents BehavioralEvent[]
+  decisionLogs     DecisionLog[]
+  decisions        Decision[]
 }
 
 model Decision {
   id          Int      @id @default(autoincrement())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   description String
   tags        String?
   riskScore   Int
   riskLevel   String
   explanation String
   createdAt   DateTime @default(now())
+
+  @@index([userId, createdAt])
 }
 
 model BehavioralEvent {
   id           String    @id @default(uuid())
   userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   taskType     String?
   plannedTime  DateTime?
   executedTime DateTime?
@@ -27,12 +45,14 @@ model BehavioralEvent {
   difficulty   Int?
   outcome      String?
   createdAt    DateTime  @default(now())
+
+  @@index([userId, createdAt])
 }
 
 model Log {
   id            String       @id @default(uuid())
   userId        String
-  user          User         @relation(fields: [userId], references: [id])
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   behaviorType  BehaviorType
   value         Int
   expectedValue Int?
@@ -65,9 +85,9 @@ model Tag {
 }
 
 model LogTag {
-  log    Log    @relation(fields: [logId], references: [id])
+  log    Log    @relation(fields: [logId], references: [id], onDelete: Cascade)
   logId  String
-  tag    Tag    @relation(fields: [tagId], references: [id])
+  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
   tagId  String
 
   @@id([logId, tagId])
@@ -75,18 +95,21 @@ model LogTag {
 
 model DecisionLog {
   id               String   @id @default(uuid())
-  userId           String?
+  userId           String
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   action           String
   context          Json
   outcome          String
   productivityDrop Int?
   createdAt        DateTime @default(now())
+
+  @@index([userId, createdAt])
 }
 
 model Insight {
-  id             String       @id @default(uuid())
-  userId         String?
-  user           User?        @relation(fields: [userId], references: [id])
+  id             String      @id @default(uuid())
+  userId         String
+  user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   type           InsightType
   message        String
   recommendation String?
@@ -94,8 +117,8 @@ model Insight {
   confidence     Float?
   insights       Json
   analysis       Json
-  generatedAt    DateTime     @default(now())
-  createdAt      DateTime     @default(now())
+  generatedAt    DateTime    @default(now())
+  createdAt      DateTime    @default(now())
 
   @@index([userId, generatedAt])
 }
@@ -105,14 +128,4 @@ enum InsightType {
   TREND
   TIME_OF_DAY
   SUDDEN_DROP
-}
-
-model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  logs     Log[]
-  insights Insight[]
 }
