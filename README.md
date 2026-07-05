@@ -123,12 +123,13 @@ This separation ensures scalability and future ML integration.
 
 Frontend: Next.js (app directory)  
 Backend: Node.js (Express or similar)  
-Database: PostgreSQL (Prisma schema added under `server/prisma`)  
+Database: PostgreSQL (Prisma schema consolidated under the root `prisma` folder)  
 
 Tech stack (updated):  
   
 Notes:  
-- A Prisma schema and seed script were added at `server/prisma/schema.prisma` and `server/seed-prisma.ts`.  
+- The Prisma schema now lives in `prisma/schema.prisma` and is shared by both the Next.js client and the Express server.  
+- The server uses `server/prisma.config.ts` to point at the shared schema, and the seed script remains at `server/seed-prisma.ts`.  
 - The client folder was switched to a Next.js scaffold (`client/app`, `client/package.json`).  
 Designed for clarity, performance, and analytical flexibility.
 

@@ -1,4 +1,12 @@
-model decision {
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Decision {
   id          Int      @id @default(autoincrement())
   description String
   tags        String?
@@ -7,17 +15,104 @@ model decision {
   explanation String
   createdAt   DateTime @default(now())
 }
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
-generator client {
-  provider = "prisma-client"
-  // removed output 
+model BehavioralEvent {
+  id           String    @id @default(uuid())
+  userId       String
+  taskType     String?
+  plannedTime  DateTime?
+  executedTime DateTime?
+  energyLevel  Int?
+  moodLevel    Int?
+  difficulty   Int?
+  outcome      String?
+  createdAt    DateTime  @default(now())
 }
 
-datasource db {
-  provider = "sqlite"
+model Log {
+  id            String       @id @default(uuid())
+  userId        String
+  user          User         @relation(fields: [userId], references: [id])
+  behaviorType  BehaviorType
+  value         Int
+  expectedValue Int?
+  outcome       String?      @default("success")
+  timestamp     DateTime
+  timezone      String?
+  note          String?
+  createdAt     DateTime     @default(now())
+  tags          LogTag[]
+
+  @@index([userId, createdAt])
+}
+
+enum BehaviorType {
+  ENERGY
+  MOOD
+}
+
+enum TagCategory {
+  Location
+  State
+  Activity
+}
+
+model Tag {
+  id       String       @id @default(uuid())
+  name     String       @unique
+  category TagCategory?
+  logs     LogTag[]
+}
+
+model LogTag {
+  log    Log    @relation(fields: [logId], references: [id])
+  logId  String
+  tag    Tag    @relation(fields: [tagId], references: [id])
+  tagId  String
+
+  @@id([logId, tagId])
+}
+
+model DecisionLog {
+  id               String   @id @default(uuid())
+  userId           String?
+  action           String
+  context          Json
+  outcome          String
+  productivityDrop Int?
+  createdAt        DateTime @default(now())
+}
+
+model Insight {
+  id             String       @id @default(uuid())
+  userId         String?
+  user           User?        @relation(fields: [userId], references: [id])
+  type           InsightType
+  message        String
+  recommendation String?
+  priority       String
+  confidence     Float?
+  insights       Json
+  analysis       Json
+  generatedAt    DateTime     @default(now())
+  createdAt      DateTime     @default(now())
+
+  @@index([userId, generatedAt])
+}
+
+enum InsightType {
+  AVERAGE
+  TREND
+  TIME_OF_DAY
+  SUDDEN_DROP
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  logs     Log[]
+  insights Insight[]
 }
