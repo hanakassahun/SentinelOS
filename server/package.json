@@ -6,8 +6,12 @@
     "dev": "ts-node-dev --respawn --transpile-only scripts/start_dev_server.ts",
     "start": "node dist/server/app.js",
     "test:analytics": "ts-node scripts/test_analytics_service.ts",
+    "seed": "ts-node prisma/seed.ts",
     "prisma:generate": "prisma generate --schema ../prisma/schema.prisma",
     "prisma:migrate": "prisma migrate dev --schema ../prisma/schema.prisma"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
     "@prisma/adapter-better-sqlite3": "^7.3.0",

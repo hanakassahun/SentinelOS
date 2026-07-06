@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "node dist/server/app.js"
+    "start": "node dist/server/app.js",
+    "seed": "node prisma/seed.js"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
