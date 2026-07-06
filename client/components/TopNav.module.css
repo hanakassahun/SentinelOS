@@ -4,25 +4,32 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 2rem;
-  background: var(--color-bg);
-  border-bottom: var(--border);
+  background: rgba(15, 23, 42, 0.94);
+  border-bottom: 1px solid rgba(148,163,184,0.18);
   font-family: var(--font-heading);
+  color: var(--color-text-secondary);
+  position: sticky;
+  top: 0;
+  z-index: 20;
 }
 .left {
   font-size: 1.25rem;
-  font-weight: 700;
-  letter-spacing: var(--letter-spacing-tight);
+  font-weight: 800;
+  letter-spacing: 0.04em;
   color: var(--color-text-primary);
 }
 .right {
-  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  font-size: 0.95rem;
   color: var(--color-text-secondary);
 }
 .right a {
   color: var(--color-text-secondary);
-  margin-left: 1.5rem;
   text-decoration: none;
   font-weight: 500;
+  transition: color 0.2s ease;
 }
 .right a:hover {
   color: var(--color-accent);

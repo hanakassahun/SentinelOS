@@ -2,38 +2,38 @@ html,body {
 	padding: 0;
 	margin: 0;
 	font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial;
-	background: #F8FAFC;
-	color: #0F172A;
+	background: #070B16;
+	color: #E2E8F0;
 }
 
 :root {
 	/* Color system */
-	--color-bg: #F8FAFC;
-	--color-text-primary: #0F172A;
-	--color-text-secondary: #475569;
-	--color-accent: #4F46E5;
-	--color-risk-low: #16A34A;
+	--color-bg: #070B16;
+	--color-text-primary: #E2E8F0;
+	--color-text-secondary: #94A3B8;
+	--color-accent: #7C3AED;
+	--color-risk-low: #22C55E;
 	--color-risk-medium: #F59E0B;
-	--color-risk-high: #DC2626;
+	--color-risk-high: #EF4444;
 
 	/* Card and border */
-	--radius: 8px;
-	--border: 1px solid #E5E7EB;
-	--shadow: 0 1px 4px 0 rgba(15,23,42,0.03);
+	--radius: 14px;
+	--border: 1px solid rgba(148,163,184,0.18);
+	--shadow: 0 20px 50px -30px rgba(0,0,0,0.32);
 
 	/* Typography */
 	--font-heading: 'Inter', system-ui, sans-serif;
 	--font-body: 'Inter', system-ui, sans-serif;
-	--heading-weight: 600;
+	--heading-weight: 700;
 	--body-weight: 400;
 	--letter-spacing-tight: -0.01em;
 	--letter-spacing-normal: 0;
 
 	/* Layout */
-	--nav-height: 56px;
+	--nav-height: 64px;
 	--sidebar-width: 320px;
 	--content-max-width: 1200px;
-	--timeline-height: 120px;
+	--timeline-height: 130px;
 }
 
 h1, h2, h3, h4, h5, h6 {

@@ -1,0 +1,206 @@
+.dashboard {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(320px, 0.95fr);
+  gap: 1.5rem;
+  max-width: var(--content-max-width);
+  margin: 2rem auto 3rem;
+  padding: 0 1rem;
+}
+.hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.heroIntro {
+  min-width: 0;
+}
+.heroLine {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;
+  color: var(--color-accent);
+  letter-spacing: 0.18em;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+.heroTitle {
+  font-size: clamp(2rem, 3vw, 2.5rem);
+  margin: 0;
+  line-height: 1.05;
+  color: var(--color-text-primary);
+}
+.heroMeta {
+  margin: 0.8rem 0 0;
+  max-width: 42rem;
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+}
+.heroStatus {
+  align-self: center;
+  padding: 0.9rem 1.1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.12);
+  color: #a5b4fc;
+  background: rgba(99,102,241,0.14);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+.panelGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.miniPanel {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(148,163,184,0.12);
+  border-radius: var(--radius);
+  padding: 1rem;
+  min-height: 112px;
+}
+.miniLabel {
+  font-size: 0.76rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  margin-bottom: 0.6rem;
+}
+.miniValue {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+.miniDetail {
+  margin-top: 0.55rem;
+  color: var(--color-text-secondary);
+  font-size: 0.92rem;
+}
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+.sectionTitle {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--color-text-primary);
+}
+.sectionSubtitle {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+}
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(34,197,94,0.14);
+  color: #a7f3d0;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.matrixRow {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.95rem;
+  border-radius: 12px;
+  border: 1px solid rgba(148,163,184,0.12);
+  background: rgba(255,255,255,0.04);
+  margin-bottom: 0.75rem;
+}
+.matrixLabel {
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+.matrixMeta {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+}
+.badge {
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+}
+.badgeLow {
+  background: rgba(34,197,94,0.18);
+  color: #a7f3d0;
+}
+.badgeMedium {
+  background: rgba(245,158,11,0.18);
+  color: #fde68a;
+}
+.badgeHigh {
+  background: rgba(248,113,113,0.18);
+  color: #fecaca;
+}
+.terminalLog {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(148,163,184,0.12);
+  border-radius: var(--radius);
+  padding: 1rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+.logLine {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 0;
+  font-size: 0.93rem;
+}
+.logLabel {
+  color: var(--color-text-primary);
+}
+.logValue {
+  color: var(--color-accent);
+}
+.energyRow {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem;
+  border-radius: 12px;
+  border: 1px solid rgba(148,163,184,0.12);
+  background: rgba(255,255,255,0.04);
+  margin-bottom: 0.75rem;
+}
+.energyLabel {
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+.energyDetail {
+  color: var(--color-text-secondary);
+  font-size: 0.88rem;
+}
+.recentList {
+  display: grid;
+  gap: 0.95rem;
+}
+.recentItem {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(148,163,184,0.12);
+  border-radius: 14px;
+  padding: 1rem;
+}
+.recentItemTitle {
+  margin: 0 0 0.35rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+.recentItemMeta {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+}
