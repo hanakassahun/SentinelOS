@@ -1,6 +1,10 @@
 {
   "/_global-error/page": "app/_global-error/page.js",
   "/_not-found/page": "app/_not-found/page.js",
+  "/api/analytics/[...path]/route": "app/api/analytics/[...path]/route.js",
+  "/api/analytics/route": "app/api/analytics/route.js",
+  "/api/decision/evaluate/route": "app/api/decision/evaluate/route.js",
+  "/api/decision/route": "app/api/decision/route.js",
   "/api/insights/route": "app/api/insights/route.js",
   "/api/insights/simple/route": "app/api/insights/simple/route.js",
   "/api/logs/route": "app/api/logs/route.js",

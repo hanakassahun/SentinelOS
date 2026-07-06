@@ -76,3 +76,145 @@ export interface Insight {
   text: string;
   createdAt: string;
 }
+
+export interface ApiResponse<T> {
+  success: boolean;
+  userId: string;
+  timestamp: string;
+  data: T;
+}
+
+export type AnalyticsResponse<T> = ApiResponse<T>;
+
+export interface RiskAlert {
+  severity: 'critical' | 'high' | 'medium' | 'low';
+  message: string;
+  reason: string;
+  recommendation: string;
+  confidence: number;
+  affectedDecisions: number[];
+}
+
+export interface Recommendation {
+  priority: 'critical' | 'high' | 'medium' | 'low';
+  category: 'decision' | 'behavioral' | 'timing' | 'wellness';
+  title: string;
+  description: string;
+  actionItems: string[];
+  estimatedImpact: string;
+  timeframe: string;
+}
+
+export interface DecisionAnalysis {
+  totalDecisions: number;
+  avgRiskScore: number;
+  medianRiskScore: number;
+  riskDistribution: { low: number; medium: number; high: number };
+  riskTrend: number;
+  highestRiskPeriod?: {
+    startDate: string;
+    endDate: string;
+    avgRiskScore: number;
+    decisionCount: number;
+  };
+  riskDaysStreak?: number;
+  decisionMomentum?: 'improving' | 'declining' | 'stable';
+}
+
+export interface BehavioralAnalysis {
+  totalEvents: number;
+  overallSuccessRate: number;
+  overallFailureRate: number;
+  taskTypeStats: Array<{
+    taskType: string;
+    totalAttempts: number;
+    successes: number;
+    failures: number;
+    successRate: number;
+    failureRate: number;
+    avgEnergy?: number;
+    avgMood?: number;
+    avgDifficulty?: number;
+  }>;
+  timeBlockAnalysis: Array<{
+    label: string;
+    totalAttempts: number;
+    successes: number;
+    failures: number;
+    successRate: number;
+    avgEnergy?: number;
+    avgMood?: number;
+    consistency: number;
+  }>;
+  bestPerformingTimeBlock?: {
+    label: string;
+    totalAttempts: number;
+    successes: number;
+    failures: number;
+    successRate: number;
+    avgEnergy?: number;
+    avgMood?: number;
+    consistency: number;
+  };
+  worstPerformingTimeBlock?: {
+    label: string;
+    totalAttempts: number;
+    successes: number;
+    failures: number;
+    successRate: number;
+    avgEnergy?: number;
+    avgMood?: number;
+    consistency: number;
+  };
+  energyOutcomeCorrelation?: number;
+  moodOutcomeCorrelation?: number;
+  consistencyScore: number;
+}
+
+export interface ComprehensiveAnalyticsData {
+  timestamp: string;
+  userId: string;
+  decisionAnalysis: DecisionAnalysis;
+  decisionQualityScore: number;
+  riskAlerts: RiskAlert[];
+  behavioralAnalysis: BehavioralAnalysis;
+  behavioralInsights: Array<{
+    type: 'strength' | 'weakness' | 'pattern' | 'opportunity';
+    title: string;
+    description: string;
+    metric: number;
+    priority: 'high' | 'medium' | 'low';
+    actionable: string;
+  }>;
+  synthesizedRecommendations: Recommendation[];
+  overallHealthScore: number;
+}
+
+export interface DecisionMetricsData {
+  decisionAnalysis: DecisionAnalysis;
+  riskAlerts: RiskAlert[];
+  qualityScore: number;
+  metricsCount: number;
+}
+
+export interface BehaviorMetricsData {
+  behavioralAnalysis: BehavioralAnalysis;
+  insights: Array<{
+    type: 'strength' | 'weakness' | 'pattern' | 'opportunity';
+    title: string;
+    description: string;
+    metric: number;
+    priority: 'high' | 'medium' | 'low';
+    actionable: string;
+  }>;
+  metricsCount: number;
+}
+
+export interface HealthScoreData {
+  healthScore: number;
+  decisionQualityScore: number;
+  successRate: number;
+  riskAlertCount: number;
+  criticalAlertsCount: number;
+  topRecommendation?: Recommendation | null;
+}

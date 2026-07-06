@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
+import type { RiskEvaluationOutput } from '../types';
 
 export default function DecisionRiskForm() {
   const [action, setAction] = useState('');
   const [context, setContext] = useState('{}');
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState<RiskEvaluationOutput | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 

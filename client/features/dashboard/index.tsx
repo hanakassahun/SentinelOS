@@ -5,29 +5,26 @@ import Card from '../../components/Card';
 import RiskScore from '../../components/RiskScore';
 import Timeline from '../../components/Timeline';
 import Loader from '../../components/Loader';
-
-const explanationPoints = [
-  'Analyzed behavioral patterns for anomalies.',
-  'Detected moderate risk due to recent activity.',
-  'No critical threats identified.',
-];
+import RecommendationBanner from '../../components/RecommendationBanner';
+import { useAnalyticsData } from '../../hooks/useAnalyticsData';
+import { DEFAULT_USER_ID } from '../../config';
 
 export default function Dashboard() {
-  const [description, setDescription] = useState("");
-  const [tags, setTags] = useState("");
+  const [description, setDescription] = useState('');
+  const [tags, setTags] = useState('');
   const [loading, setLoading] = useState(false);
   const [decision, setDecision] = useState<any | null>(null);
   const [showExplanation, setShowExplanation] = useState(false);
   const [recentDecisions, setRecentDecisions] = useState<any[]>([]);
 
-  // Fetch last 5 decisions
+  const { loading: analyticsLoading, error, comprehensive, health, refresh } = useAnalyticsData(DEFAULT_USER_ID);
+
   React.useEffect(() => {
-    fetch("/api/decision")
-      .then(res => res.json())
+    fetch('/api/decision')
+      .then((res) => res.json())
       .then(setRecentDecisions);
   }, []);
 
-  // Show explanation animation
   React.useEffect(() => {
     if (decision) {
       setShowExplanation(false);
@@ -39,18 +36,18 @@ export default function Dashboard() {
     e.preventDefault();
     setLoading(true);
     setShowExplanation(false);
-    const res = await fetch("/api/decision", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+    const res = await fetch('/api/decision', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ description, tags }),
     });
     const data = await res.json();
     setDecision(data);
     setLoading(false);
-    // Refresh recent decisions
-    fetch("/api/decision")
-      .then(res => res.json())
+    fetch('/api/decision')
+      .then((res) => res.json())
       .then(setRecentDecisions);
+    await refresh();
   };
 
   return (
@@ -63,18 +60,88 @@ export default function Dashboard() {
         gap: '2.5rem',
         alignItems: 'flex-start',
       }}>
-        {/* Left Column: Action Input */}
         <section style={{ flex: 1, minWidth: 320 }}>
           <Card>
-            <h2 style={{ marginBottom: 8 }}>Action Description</h2>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12 }}>
+              <div>
+                <h2 style={{ marginBottom: 4 }}>Decision Advisor</h2>
+                <p style={{ margin: 0, color: '#64748b' }}>Insights for {DEFAULT_USER_ID}</p>
+              </div>
+              <button
+                type="button"
+                onClick={refresh}
+                style={{
+                  background: '#e2e8f0',
+                  border: 'none',
+                  borderRadius: 10,
+                  padding: '0.7rem 1rem',
+                  cursor: 'pointer',
+                }}
+              >
+                Refresh
+              </button>
+            </div>
+            {analyticsLoading ? (
+              <div style={{ marginTop: 16 }}><Loader /></div>
+            ) : error ? (
+              <div style={{ marginTop: 16, color: '#b91c1c' }}>{error}</div>
+            ) : comprehensive ? (
+              <div style={{ marginTop: 16, display: 'grid', gap: 12 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                  <Card>
+                    <strong>Health</strong>
+                    <div style={{ fontSize: 32, fontWeight: 700, color: '#0f766e' }}>{health?.healthScore ?? comprehensive.overallHealthScore}</div>
+                    <div style={{ color: '#475569' }}>Overall health score</div>
+                  </Card>
+                  <Card>
+                    <strong>Decision Quality</strong>
+                    <div style={{ fontSize: 32, fontWeight: 700, color: '#1d4ed8' }}>{health?.decisionQualityScore ?? comprehensive.decisionQualityScore}</div>
+                    <div style={{ color: '#475569' }}>Decision engine score</div>
+                  </Card>
+                </div>
+                <div>
+                  {comprehensive.synthesizedRecommendations.slice(0, 1).map((recommendation) => (
+                    <RecommendationBanner key={recommendation.title} recommendation={recommendation} />
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div style={{ marginTop: 16, color: '#475569' }}>No analytics available yet.</div>
+            )}
+          </Card>
+
+          <Card style={{ marginTop: 20 }}>
+            <h3 style={{ marginBottom: 12 }}>Latest Insights</h3>
+            {comprehensive?.behavioralInsights?.length ? (
+              <div style={{ display: 'grid', gap: 12 }}>
+                {comprehensive.behavioralInsights.map((insight) => (
+                  <div key={insight.title} style={{ background: '#fff', borderRadius: 12, padding: 14, boxShadow: '0 1px 2px rgba(15,23,42,.05)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, marginBottom: 6 }}>
+                      <strong>{insight.title}</strong>
+                      <span style={{ color: insight.priority === 'high' ? '#b91c1c' : insight.priority === 'medium' ? '#c2410c' : '#16a34a' }}>{insight.priority}</span>
+                    </div>
+                    <p style={{ margin: 0, color: '#475569' }}>{insight.description}</p>
+                    <div style={{ marginTop: 8, color: '#334155', fontSize: 13 }}>Actionable: {insight.actionable}</div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div style={{ color: '#64748b' }}>No behavioral insights available yet.</div>
+            )}
+          </Card>
+        </section>
+
+        <section style={{ flex: 1, minWidth: 320 }}>
+          <Card>
+            <h3 style={{ marginBottom: 12 }}>Decision Submission</h3>
             <form onSubmit={handleSubmit}>
               <textarea
                 value={description}
-                onChange={e => setDescription(e.target.value)}
+                onChange={(e) => setDescription(e.target.value)}
                 placeholder="Describe the decision or action..."
                 style={{
                   width: '100%',
-                  minHeight: 80,
+                  minHeight: 100,
                   borderRadius: 'var(--radius)',
                   border: 'var(--border)',
                   padding: '0.75rem',
@@ -84,117 +151,64 @@ export default function Dashboard() {
                 }}
                 required
               />
-              <div style={{ marginBottom: 16 }}>
-                <label style={{ fontWeight: 500 }}>Context Tags (optional)</label>
-                <input
-                  type="text"
-                  value={tags}
-                  onChange={e => setTags(e.target.value)}
-                  placeholder="Add tags..."
-                  style={{
-                    width: '100%',
-                    borderRadius: 'var(--radius)',
-                    border: 'var(--border)',
-                    padding: '0.5rem',
-                    fontSize: 15,
-                    marginTop: 6,
-                  }}
-                />
-              </div>
+              <input
+                type="text"
+                value={tags}
+                onChange={(e) => setTags(e.target.value)}
+                placeholder="Context tags (optional)"
+                style={{
+                  width: '100%',
+                  borderRadius: 'var(--radius)',
+                  border: 'var(--border)',
+                  padding: '0.75rem',
+                  fontSize: 15,
+                  marginBottom: 16,
+                }}
+              />
               <button
                 type="submit"
                 disabled={loading}
                 style={{
+                  width: '100%',
                   background: loading ? '#c7d2fe' : 'var(--color-accent)',
                   color: '#fff',
                   border: 'none',
                   borderRadius: 'var(--radius)',
-                  padding: '0.75rem 1.5rem',
-                  fontWeight: 600,
+                  padding: '0.9rem',
+                  fontWeight: 700,
                   fontSize: 16,
                   cursor: loading ? 'not-allowed' : 'pointer',
-                  boxShadow: 'none',
-                  transition: 'background 0.2s',
                 }}
               >
-                {loading ? <Loader /> : 'Analyze Decision'}
+                {loading ? <Loader /> : 'Submit Decision'}
               </button>
             </form>
           </Card>
-          {/* Last 5 Decisions */}
-          <Card>
-            <h3 style={{ marginBottom: 8 }}>Last 5 Decisions</h3>
-            <ul style={{ paddingLeft: 0, margin: 0 }}>
-              {recentDecisions.map(d => (
-                <li key={d.id} style={{ marginBottom: 12, listStyle: 'none', borderBottom: '1px solid #e5e7eb', paddingBottom: 8 }}>
-                  <div style={{ fontWeight: 500 }}>{d.description}</div>
-                  <div style={{ color: 'var(--color-text-secondary)', fontSize: 14 }}>{d.tags}</div>
-                  <div style={{ color: 'var(--color-risk-' + d.riskLevel + ')', fontWeight: 600 }}>Score: {d.riskScore} ({d.riskLevel})</div>
-                  <div style={{ fontSize: 13, color: '#64748b' }}>Time: {new Date(d.createdAt).toLocaleTimeString()}</div>
-                  <ul style={{ fontSize: 13, color: '#475569', marginTop: 4 }}>
-                    {d.explanation.map((pt: string, i: number) => (
-                      <li key={i}>{pt}</li>
-                    ))}
-                  </ul>
-                </li>
-              ))}
-            </ul>
-          </Card>
-        </section>
 
-        {/* Right Column: Risk Output */}
-        <section style={{ flex: 1, minWidth: 320 }}>
-          <Card>
-            {decision ? (
-              <>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 18, marginBottom: 12 }}>
-                  <div>
-                    <div style={{ fontWeight: 500, color: 'var(--color-text-secondary)', fontSize: 15 }}>Risk Score</div>
-                    <RiskScore score={decision.riskScore} level={decision.riskLevel} />
+          <Card style={{ marginTop: 20 }}>
+            <h3 style={{ marginBottom: 12 }}>Recent Decisions</h3>
+            {recentDecisions.length > 0 ? (
+              <div style={{ display: 'grid', gap: 12 }}>
+                {recentDecisions.map((d) => (
+                  <div key={d.id} style={{ borderRadius: 12, background: '#f8fafc', padding: 12 }}>
+                    <div style={{ fontWeight: 600 }}>{d.description}</div>
+                    <div style={{ color: '#475569', fontSize: 13 }}>{d.tags}</div>
+                    <div style={{ marginTop: 6, display: 'flex', justifyContent: 'space-between', gap: 12 }}>
+                      <span>Score: {d.riskScore}</span>
+                      <span>{d.riskLevel}</span>
+                    </div>
                   </div>
-                  <span
-                    style={{
-                      background: `var(--color-risk-${decision.riskLevel})`,
-                      color: '#fff',
-                      borderRadius: 6,
-                      padding: '0.35em 0.9em',
-                      fontWeight: 600,
-                      fontSize: 15,
-                      marginLeft: 8,
-                      letterSpacing: '0.01em',
-                      transition: 'background 0.4s',
-                    }}
-                  >
-                    {decision.riskLevel.charAt(0).toUpperCase() + decision.riskLevel.slice(1)} Risk
-                  </span>
-                </div>
-                <div style={{ fontWeight: 500, marginBottom: 8 }}>Explanation</div>
-                <ul style={{ paddingLeft: 18, margin: 0 }}>
-                  {decision.explanation.map((pt: string, i: number) => (
-                    <li
-                      key={i}
-                      style={{
-                        opacity: showExplanation ? 1 : 0,
-                        transition: `opacity 0.4s ${0.15 * i + 0.2}s`,
-                        marginBottom: 6,
-                      }}
-                    >
-                      {pt}
-                    </li>
-                  ))}
-                </ul>
-              </>
+                ))}
+              </div>
             ) : (
-              <div style={{ color: 'var(--color-text-secondary)', fontSize: 15 }}>Submit a decision to see risk evaluation.</div>
+              <div style={{ color: '#64748b' }}>No decisions found yet.</div>
             )}
-            {loading && <Loader />}
           </Card>
         </section>
       </main>
-      {/* Bottom Section: Timeline */}
       <section style={{ maxWidth: 'var(--content-max-width)', margin: '0 auto 2.5rem auto' }}>
         <Timeline
-          events={recentDecisions.map(d => ({
+          events={recentDecisions.map((d) => ({
             label: d.description,
             risk: d.riskLevel,
             time: new Date(d.createdAt).toLocaleTimeString(),

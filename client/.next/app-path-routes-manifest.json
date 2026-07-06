@@ -1,6 +1,10 @@
 {
   "/_global-error/page": "/_global-error",
   "/_not-found/page": "/_not-found",
+  "/api/analytics/[...path]/route": "/api/analytics/[...path]",
+  "/api/analytics/route": "/api/analytics",
+  "/api/decision/evaluate/route": "/api/decision/evaluate",
+  "/api/decision/route": "/api/decision",
   "/api/insights/route": "/api/insights",
   "/api/insights/simple/route": "/api/insights/simple",
   "/api/logs/route": "/api/logs",

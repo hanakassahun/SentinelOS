@@ -1,14 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { evaluateDecisionRisk } from '../../../../services/evaluateDecisionRisk';
 
-export const runtime = "node";
+const SERVER = process.env.NEXT_PUBLIC_SERVER_API_URL || 'http://localhost:3333';
+
+async function proxy(req: NextRequest) {
+  const url = new URL(req.url);
+  const target = `${SERVER}${url.pathname}${url.search}`;
+
+  const res = await fetch(target, {
+    method: req.method,
+    headers: {
+      accept: 'application/json',
+      ...Object.fromEntries(req.headers.entries()),
+    },
+    body: req.method !== 'GET' && req.method !== 'HEAD' ? await req.text() : undefined,
+  });
+
+  const body = await res.text();
+  const headers = new Headers(res.headers);
+  return new NextResponse(body, { status: res.status, headers });
+}
 
 export async function POST(req: NextRequest) {
-  try {
-    const { context, action } = await req.json();
-    const riskResult = await evaluateDecisionRisk(context, action);
-    return NextResponse.json(riskResult);
-  } catch (e) {
-    return NextResponse.json({ error: 'Failed to evaluate decision risk', details: String(e) }, { status: 500 });
-  }
+  return proxy(req);
 }
