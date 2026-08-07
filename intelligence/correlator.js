@@ -1,10 +1,40 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.InsightTemplateEngine = void 0;
 exports.analyzeDeviations = analyzeDeviations;
 exports.getHistoricalTaskTrends = getHistoricalTaskTrends;
 exports.calculateTimeBlockSuccess = calculateTimeBlockSuccess;
 const prismaClient_1 = require("../server/services/prismaClient");
 const prisma = prismaClient_1.default;
+class InsightTemplateEngine {
+    constructor() {
+        this.templates = {
+            morning: ({ hourBlock, successRate, rollingAverage }) => `You finish work ${Math.round((successRate / Math.max(rollingAverage, 1)) * 100)}% more often during your morning blocks. Consider moving this task out of your ${this.formatHour(hourBlock)} high-friction window.`,
+            afternoon: ({ hourBlock, successRate, rollingAverage }) => `Your afternoon rhythm is showing friction. You are finishing tasks at ${successRate}% success versus a ${Math.round(rollingAverage)}% rolling baseline, so move demanding work away from ${this.formatHour(hourBlock)}.`,
+            evening: ({ hourBlock, successRate, rollingAverage }) => `Your evening plan is underperforming. You are succeeding at ${successRate}% versus ${Math.round(rollingAverage)}% historically, so consider rescheduling this task away from ${this.formatHour(hourBlock)}.`,
+            night: ({ hourBlock, successRate, rollingAverage }) => `You finish work ${Math.round((successRate / Math.max(rollingAverage, 1)) * 100)}% more often during your morning blocks. Consider moving this task out of your ${this.formatHour(hourBlock)} high-friction window.`,
+        };
+    }
+    render(payload) {
+        const period = this.getTimePeriod(payload.hourBlock);
+        return this.templates[period](payload);
+    }
+    getTimePeriod(hourBlock) {
+        if (hourBlock >= 5 && hourBlock < 12)
+            return 'morning';
+        if (hourBlock >= 12 && hourBlock < 18)
+            return 'afternoon';
+        if (hourBlock >= 18 && hourBlock < 23)
+            return 'evening';
+        return 'night';
+    }
+    formatHour(hourBlock) {
+        const suffix = hourBlock >= 12 ? 'PM' : 'AM';
+        const normalized = hourBlock % 12 === 0 ? 12 : hourBlock % 12;
+        return `${normalized} ${suffix}`;
+    }
+}
+exports.InsightTemplateEngine = InsightTemplateEngine;
 function normalizeOutcome(outcome) {
     const normalized = (outcome ?? '').toLowerCase();
     return ['completed', 'complete', 'success', 'succeeded', 'done'].includes(normalized);

@@ -30,6 +30,41 @@ export interface HighFrictionZone {
   reason: string;
 }
 
+export interface InsightTemplatePayload extends HighFrictionZone {
+  averageEnergy: number | null;
+}
+
+export class InsightTemplateEngine {
+  private readonly templates: Record<string, (payload: InsightTemplatePayload) => string> = {
+    morning: ({ hourBlock, successRate, rollingAverage }) =>
+      `You finish work ${Math.round((successRate / Math.max(rollingAverage, 1)) * 100)}% more often during your morning blocks. Consider moving this task out of your ${this.formatHour(hourBlock)} high-friction window.`,
+    afternoon: ({ hourBlock, successRate, rollingAverage }) =>
+      `Your afternoon rhythm is showing friction. You are finishing tasks at ${successRate}% success versus a ${Math.round(rollingAverage)}% rolling baseline, so move demanding work away from ${this.formatHour(hourBlock)}.`,
+    evening: ({ hourBlock, successRate, rollingAverage }) =>
+      `Your evening plan is underperforming. You are succeeding at ${successRate}% versus ${Math.round(rollingAverage)}% historically, so consider rescheduling this task away from ${this.formatHour(hourBlock)}.`,
+    night: ({ hourBlock, successRate, rollingAverage }) =>
+      `You finish work ${Math.round((successRate / Math.max(rollingAverage, 1)) * 100)}% more often during your morning blocks. Consider moving this task out of your ${this.formatHour(hourBlock)} high-friction window.`,
+  };
+
+  public render(payload: InsightTemplatePayload): string {
+    const period = this.getTimePeriod(payload.hourBlock);
+    return this.templates[period](payload);
+  }
+
+  private getTimePeriod(hourBlock: number): keyof InsightTemplateEngine['templates'] {
+    if (hourBlock >= 5 && hourBlock < 12) return 'morning';
+    if (hourBlock >= 12 && hourBlock < 18) return 'afternoon';
+    if (hourBlock >= 18 && hourBlock < 23) return 'evening';
+    return 'night';
+  }
+
+  private formatHour(hourBlock: number): string {
+    const suffix = hourBlock >= 12 ? 'PM' : 'AM';
+    const normalized = hourBlock % 12 === 0 ? 12 : hourBlock % 12;
+    return `${normalized} ${suffix}`;
+  }
+}
+
 function normalizeOutcome(outcome?: string | null): boolean {
   const normalized = (outcome ?? '').toLowerCase();
   return ['completed', 'complete', 'success', 'succeeded', 'done'].includes(normalized);
