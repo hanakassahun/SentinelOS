@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.analyzeDeviations = analyzeDeviations;
 exports.getHistoricalTaskTrends = getHistoricalTaskTrends;
 exports.calculateTimeBlockSuccess = calculateTimeBlockSuccess;
 const prismaClient_1 = require("../server/services/prismaClient");
@@ -7,6 +8,35 @@ const prisma = prismaClient_1.default;
 function normalizeOutcome(outcome) {
     const normalized = (outcome ?? '').toLowerCase();
     return ['completed', 'complete', 'success', 'succeeded', 'done'].includes(normalized);
+}
+function analyzeDeviations(history) {
+    if (history.length === 0) {
+        return [];
+    }
+    const successRates = history.map((entry) => entry.successRate);
+    const baselineMean = successRates.reduce((sum, value) => sum + value, 0) / successRates.length;
+    const variance = successRates.reduce((sum, value) => sum + (value - baselineMean) ** 2, 0) / successRates.length;
+    const standardDeviation = Math.sqrt(variance);
+    return history
+        .map((entry, index) => {
+        const previousEntries = history.slice(Math.max(0, index - 3), index + 1);
+        const rollingAverage = previousEntries.reduce((sum, item) => sum + item.successRate, 0) / previousEntries.length;
+        const deviationFromBaseline = entry.successRate - baselineMean;
+        const isSignificantDrop = entry.successRate < baselineMean - Math.max(10, standardDeviation * 0.75);
+        if (!isSignificantDrop) {
+            return null;
+        }
+        return {
+            hourBlock: entry.hourBlock,
+            successRate: entry.successRate,
+            rollingAverage,
+            standardDeviation,
+            deviationFromBaseline,
+            reason: `Success rate fell ${Math.abs(deviationFromBaseline).toFixed(1)} points below the user's baseline.`,
+        };
+    })
+        .filter((item) => item !== null)
+        .sort((a, b) => a.hourBlock - b.hourBlock);
 }
 async function getHistoricalTaskTrends(userId) {
     const taskModel = prisma.taskEvent ?? prisma.eventLog ?? prisma.behavioralEvent;
