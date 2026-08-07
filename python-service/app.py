@@ -1,14 +1,8 @@
-from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 
+from main import app
 from ml_model import RiskModel
 from schemas import RiskRequest, RiskResponse
-
-app = FastAPI(
-    title="SentinelOS Python Risk Service",
-    description="Prototype FastAPI service for behavioral risk scoring",
-    version="0.1.0",
-)
 
 model = RiskModel()
 

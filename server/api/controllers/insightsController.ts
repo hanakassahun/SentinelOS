@@ -8,6 +8,7 @@ import {
   buildInsightsFromAnalytics,
   getBehaviorAnalytics,
 } from '../../services/analyticsService';
+import { insightQueue } from '../../queues/insightQueue';
 
 // Simple in-memory cache for analysis/insights (per-process). Cached for 24h by default.
 let cached: { ts: number; insights: any[]; analysis: any } | null = null;
@@ -110,6 +111,22 @@ export async function refreshInsights(_req: Request, res: Response) {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to refresh insights' });
+  }
+}
+
+export async function triggerInsightQueue(req: Request, res: Response) {
+  try {
+    const userId = String(req.body?.userId || req.query.userId || '');
+
+    if (!userId) {
+      return res.status(400).json({ error: 'userId is required' });
+    }
+
+    await insightQueue.add('generate', { userId });
+    res.json({ ok: true, queued: true, userId });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to queue insight generation' });
   }
 }
 
