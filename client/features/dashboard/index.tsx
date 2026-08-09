@@ -13,7 +13,7 @@ import { useAnalyticsData } from '../../hooks/useAnalyticsData';
 import { DEFAULT_USER_ID } from '../../config';
 import styles from './Dashboard.module.css';
 
-const shadowSchedulePoints = [
+const initialShadowSchedulePoints = [
   { hour: 9, label: '09:00', riskScore: 24, evidence: 'high friction' },
   { hour: 14, label: '14:00', riskScore: 52, evidence: 'slipping into low-energy blocks' },
   { hour: 15, label: '15:00', riskScore: 63, evidence: 'frequent late-task drift' },
@@ -61,6 +61,7 @@ export default function Dashboard() {
   }, [behavior, comprehensive]);
 
   const actionables = comprehensive?.synthesizedRecommendations ?? [];
+  const [shadowSchedulePoints, setShadowSchedulePoints] = useState(initialShadowSchedulePoints);
 
   const terminalLog = [
     {
@@ -90,6 +91,19 @@ export default function Dashboard() {
   const [insightYLabels, setInsightYLabels] = useState<string[]>([]);
   
   useEffect(() => {
+    // fetch live shadow schedule points from server
+    (async () => {
+      try {
+        const res = await fetch(`/api/shadow?userId=${DEFAULT_USER_ID}`);
+        if (res.ok) {
+          const payload = await res.json();
+          if (payload && payload.points) setShadowSchedulePoints(payload.points);
+        }
+      } catch (err) {
+        // ignore
+      }
+    })();
+
     const buildHeatmap = () => {
       const days = 7;
       const hours = 24;
@@ -109,6 +123,20 @@ export default function Dashboard() {
     };
     buildHeatmap();
   }, [recentDecisions]);
+
+  const persistSnapshot = async () => {
+    try {
+      await fetch('/api/shadow/snapshot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: DEFAULT_USER_ID, points: shadowSchedulePoints }),
+      });
+      // Optionally refresh insights after persisting
+      await refresh();
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -230,7 +258,10 @@ export default function Dashboard() {
             <div style={{ marginTop: '1.25rem' }}>
               <InsightsCharts />
             </div>
-            <ShadowScheduleViewer points={shadowSchedulePoints} />
+            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+              <ShadowScheduleViewer points={shadowSchedulePoints} />
+              <button onClick={persistSnapshot} style={{ height: 40, padding: '0 12px', borderRadius: 6 }}>Save Snapshot</button>
+            </div>
           </Card>
 
           <Card style={{ marginTop: '1rem' }}>
