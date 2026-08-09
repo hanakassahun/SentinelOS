@@ -5,6 +5,14 @@ from fastapi import FastAPI, HTTPException, status
 from pydantic import BaseModel, Field, field_validator
 from sklearn.ensemble import IsolationForest
 
+
+def normalize_payload(payload: dict) -> dict:
+    return {
+        "energy_level": payload.get("energy_level", payload.get("energyLevel", 0)),
+        "cognitive_load": payload.get("cognitive_load", payload.get("cognitiveLoad", 0)),
+        "consecutive_hours": payload.get("consecutive_hours", payload.get("consecutiveHours", 0)),
+    }
+
 app = FastAPI(title="SentinelOS Intelligence Engine")
 
 
@@ -41,7 +49,8 @@ def detect_outliers(tasks: List[TaskData]) -> OutlierResponse:
 
     try:
         feature_columns = ["energy_level", "cognitive_load", "consecutive_hours"]
-        df = pd.DataFrame([task.model_dump() for task in tasks])[feature_columns]
+        normalized_tasks = [normalize_payload(task.model_dump()) for task in tasks]
+        df = pd.DataFrame(normalized_tasks)[feature_columns]
 
         clf = IsolationForest(contamination=0.15, random_state=42)
         predictions = clf.fit_predict(df)

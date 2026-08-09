@@ -3,6 +3,14 @@
 import React, { useState, useEffect } from 'react';
 import styles from './quicklog.module.css';
 
+function normalizeClientPayload(payload: Record<string, unknown>) {
+  return {
+    energy_level: Number(payload.energy_level ?? payload.energyLevel ?? 0),
+    cognitive_load: Number(payload.cognitive_load ?? payload.cognitiveLoad ?? 0),
+    consecutive_hours: Number(payload.consecutive_hours ?? payload.consecutiveHours ?? 0),
+  };
+}
+
 type Behavior = 'ENERGY' | 'MOOD';
 
 const SEMANTIC_LABEL = (v: number) => {
@@ -138,6 +146,14 @@ export default function QuickLog() {
       tags,
       note: note || undefined,
     };
+
+    const normalizedAnalyticsPayload = normalizeClientPayload({
+      energyLevel: behavior === 'ENERGY' ? value : undefined,
+      cognitiveLoad: behavior === 'MOOD' ? value : undefined,
+      consecutiveHours: 1,
+    });
+
+    void normalizedAnalyticsPayload;
 
     // optimistic feedback
     setMessage('✅ Logged. You\'re building your behavioral intelligence.');

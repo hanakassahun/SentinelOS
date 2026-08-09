@@ -9,26 +9,27 @@ import {
   getBehaviorAnalytics,
 } from '../../services/analyticsService';
 import { insightQueue } from '../../queues/insightQueue';
+import { getCachedInsights, invalidateCachedInsights } from '../../services/cachedInsights';
 
 // Simple in-memory cache for analysis/insights (per-process). Cached for 24h by default.
 let cached: { ts: number; insights: any[]; analysis: any } | null = null;
 let CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 
-export async function getInsights(_req: Request, res: Response) {
+export async function getInsights(req: Request, res: Response) {
   try {
     const now = Date.now();
+    const force = req.query && String(req.query.force) === 'true';
+    const userId = String(req.query.userId || 'default');
 
-    // Try DB-backed cached insight first (persisted cache)
-    const force = _req.query && String(_req.query.force) === 'true';
     if (!force) {
-      const persisted = await prisma.insight.findFirst({
-        orderBy: { generatedAt: 'desc' },
-      });
-      if (persisted) {
-        const age = now - persisted.generatedAt.getTime();
-        if (age < CACHE_TTL_MS) {
-          return res.json({ insights: persisted.insights, analysis: persisted.analysis, cached: true });
-        }
+      const cached = await getCachedInsights(userId);
+      if (cached) {
+        return res.json({
+          insights: cached.insights,
+          analysis: cached.analysis,
+          cached: true,
+          generatedAt: cached.generatedAt.toISOString(),
+        });
       }
     }
 
@@ -62,6 +63,7 @@ export async function getInsights(_req: Request, res: Response) {
     // Persist generated insights (cache)
     await prisma.insight.create({
       data: {
+        userId,
         type: 'TREND',
         message: 'Cached generated energy insights',
         priority: 'low',
@@ -69,6 +71,7 @@ export async function getInsights(_req: Request, res: Response) {
         analysis: analysis as any,
       },
     });
+    invalidateCachedInsights(userId);
 
     // Update in-process cache
     cached = { ts: Date.now(), insights, analysis };
@@ -122,6 +125,7 @@ export async function triggerInsightQueue(req: Request, res: Response) {
       return res.status(400).json({ error: 'userId is required' });
     }
 
+    invalidateCachedInsights(userId);
     await insightQueue.add('generate', { userId });
     res.json({ ok: true, queued: true, userId });
   } catch (err) {
