@@ -17,7 +17,7 @@ import {
   analyzeBehavior,
   generateBehavioralInsights,
   normalizeBehavioralEvents,
-} from '../../../intelligence/analytics';
+} from '../../intelligence/analytics';
 
 /**
  * GET /api/analytics/:userId

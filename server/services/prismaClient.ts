@@ -1,8 +1,14 @@
 import { PrismaClient } from '@prisma/client';
 
-const url = process.env.DATABASE_URL ?? 'file:dev.db';
+const provider = (process.env.DATABASE_PROVIDER ?? 'sqlite').toLowerCase();
+const url = provider === 'postgres' || provider === 'postgresql'
+  ? (process.env.DATABASE_URL ?? 'file:dev.db')
+  : (process.env.DATABASE_URL ?? 'file:dev.db');
+
+process.env.DATABASE_PROVIDER = provider;
 process.env.DATABASE_URL = url;
 process.env.PRISMA_CLIENT_ENGINE_TYPE = process.env.PRISMA_CLIENT_ENGINE_TYPE ?? 'wasm-compiler-edge';
+console.log('[prismaClient] DATABASE_PROVIDER=', provider);
 console.log('[prismaClient] DATABASE_URL=', process.env.DATABASE_URL);
 console.log('[prismaClient] PRISMA_CLIENT_ENGINE_TYPE=', process.env.PRISMA_CLIENT_ENGINE_TYPE);
 

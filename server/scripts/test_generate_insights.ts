@@ -1,8 +1,8 @@
 import { getLogs } from '../services/insightsService';
-import { generateInsightsFromLogs } from '../../internal/intelligence/insightGenerator';
+import { generateInsights } from '../intelligence/insight-generator/generateInsights';
 
 (async function(){
   const logs = await getLogs();
-  const report = generateInsightsFromLogs(logs);
+  const report = generateInsights(logs as any);
   console.log(JSON.stringify(report, null, 2));
 })();

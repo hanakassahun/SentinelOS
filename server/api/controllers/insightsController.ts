@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import prisma from '../../services/prismaClient';
-import { analyzeEnergy } from '../../../intelligence/energyAnalyzer';
-import { generateEnergyInsights } from '../../../intelligence/insightGenerator';
+import { analyzeEnergy } from '../../intelligence/energyAnalyzer';
+import { generateEnergyInsights } from '../../intelligence/insightGenerator';
 import { getLogs } from '../../services/insightsService';
-import { generateInsightsFromLogs } from '../../../internal/intelligence/insightGenerator';
+import { generateInsights } from '../../intelligence/insight-generator/generateInsights';
 import {
   buildInsightsFromAnalytics,
   getBehaviorAnalytics,

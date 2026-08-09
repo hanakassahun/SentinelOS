@@ -123,7 +123,7 @@ This separation ensures scalability and future ML integration.
 
 Frontend: Next.js (app directory)  
 Backend: Node.js (Express or similar)  
-Database: PostgreSQL (Prisma schema consolidated under the root `prisma` folder)  
+Database: SQLite by default for local/private use, with optional PostgreSQL-compatible settings for hosted deployments  
 
 Tech stack (updated):  
   
@@ -175,6 +175,17 @@ curl http://localhost:3000/api/insights
 curl http://localhost:3000/api/insights?force=true
 curl http://localhost:3000/api/insights/history
 ```
+
+### Privacy mode / local SQLite
+
+Set the following environment variable to keep the stack fully local and lightweight:
+
+```powershell
+$env:DATABASE_PROVIDER="sqlite"
+$env:DATABASE_URL="file:./dev.db"
+```
+
+This allows developers to run the app against a local SQLite database file without requiring a cloud-hosted PostgreSQL setup.
 
 ### Persistence model
 

@@ -8,9 +8,18 @@ import Loader from '../../components/Loader';
 import RecommendationBanner from '../../components/RecommendationBanner';
 import InsightsCharts from '../../components/InsightsCharts';
 import Heatmap from '../../components/Heatmap';
+import ShadowScheduleViewer from '../../components/ShadowScheduleViewer';
 import { useAnalyticsData } from '../../hooks/useAnalyticsData';
 import { DEFAULT_USER_ID } from '../../config';
 import styles from './Dashboard.module.css';
+
+const shadowSchedulePoints = [
+  { hour: 9, label: '09:00', riskScore: 24, evidence: 'high friction' },
+  { hour: 14, label: '14:00', riskScore: 52, evidence: 'slipping into low-energy blocks' },
+  { hour: 15, label: '15:00', riskScore: 63, evidence: 'frequent late-task drift' },
+  { hour: 17, label: '17:00', riskScore: 71, evidence: 'weak finish rates' },
+  { hour: 20, label: '20:00', riskScore: 58, evidence: 'reduced focus' },
+];
 
 const badgeClass = (level: 'low' | 'medium' | 'high' | undefined) => {
   if (level === 'high') return styles.badgeHigh;
@@ -221,6 +230,7 @@ export default function Dashboard() {
             <div style={{ marginTop: '1.25rem' }}>
               <InsightsCharts />
             </div>
+            <ShadowScheduleViewer points={shadowSchedulePoints} />
           </Card>
 
           <Card style={{ marginTop: '1rem' }}>

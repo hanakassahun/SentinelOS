@@ -1,0 +1,258 @@
+/*
+ * Decision Analysis Engine
+ * 
+ * Analyzes user decision patterns, risk trends, and decision-making quality
+ * over time. Provides insights into:
+ * - Risk score trends
+ * - Decision outcome distributions
+ * - High-risk decision periods
+ * - Decision confidence and consistency
+ */
+
+export interface DecisionSnapshot {
+  id: number;
+  riskScore: number;
+  riskLevel: 'low' | 'medium' | 'high';
+  description: string;
+  tags: string[];
+  createdAt: Date;
+}
+
+export interface DecisionAnalysis {
+  totalDecisions: number;
+  avgRiskScore: number;
+  medianRiskScore: number;
+  riskDistribution: {
+    low: number;
+    medium: number;
+    high: number;
+  };
+  riskTrend: number; // percentage change recent vs previous
+  highestRiskPeriod?: {
+    startDate: Date;
+    endDate: Date;
+    avgRiskScore: number;
+    decisionCount: number;
+  };
+  riskDaysStreak?: number; // consecutive days with high-risk decisions
+  decisionMomentum?: 'improving' | 'declining' | 'stable';
+  tagRiskMap: Map<string, { avgRisk: number; count: number }>;
+}
+
+export interface RiskAlert {
+  severity: 'critical' | 'high' | 'medium' | 'low';
+  message: string;
+  reason: string;
+  recommendation: string;
+  confidence: number; // 0-1
+  affectedDecisions: number[];
+}
+
+export function normalizeDecisions(decisions: any[]): DecisionSnapshot[] {
+  return decisions.map((d) => ({
+    id: d.id,
+    riskScore: Number(d.riskScore) || 0,
+    riskLevel: d.riskLevel as 'low' | 'medium' | 'high',
+    description: d.description || '',
+    tags: d.tags ? (typeof d.tags === 'string' ? d.tags.split(',').map((t: string) => t.trim()) : []) : [],
+    createdAt: new Date(d.createdAt),
+  }));
+}
+
+export function analyzeDecisionPatterns(decisions: DecisionSnapshot[]): DecisionAnalysis {
+  if (decisions.length === 0) {
+    return {
+      totalDecisions: 0,
+      avgRiskScore: 0,
+      medianRiskScore: 0,
+      riskDistribution: { low: 0, medium: 0, high: 0 },
+      riskTrend: 0,
+      tagRiskMap: new Map(),
+    };
+  }
+
+  const sorted = [...decisions].sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+
+  const riskScores = sorted.map((d) => d.riskScore);
+  const avgRiskScore = Number((riskScores.reduce((a, b) => a + b, 0) / riskScores.length).toFixed(2));
+
+  const sortedScores = [...riskScores].sort((a, b) => a - b);
+  const medianRiskScore =
+    riskScores.length % 2 === 0
+      ? (sortedScores[riskScores.length / 2 - 1] + sortedScores[riskScores.length / 2]) / 2
+      : sortedScores[Math.floor(riskScores.length / 2)];
+
+  const riskDistribution = {
+    low: sorted.filter((d) => d.riskLevel === 'low').length,
+    medium: sorted.filter((d) => d.riskLevel === 'medium').length,
+    high: sorted.filter((d) => d.riskLevel === 'high').length,
+  };
+
+  const mid = Math.floor(sorted.length / 2);
+  const recentDecisions = sorted.slice(Math.max(0, sorted.length - 7));
+  const previousDecisions = sorted.slice(Math.max(0, mid - 7), mid);
+
+  const recentAvg = recentDecisions.length > 0 ? recentDecisions.reduce((a, d) => a + d.riskScore, 0) / recentDecisions.length : 0;
+  const prevAvg = previousDecisions.length > 0 ? previousDecisions.reduce((a, d) => a + d.riskScore, 0) / previousDecisions.length : 0;
+
+  const riskTrend = prevAvg === 0 ? 0 : Number((((recentAvg - prevAvg) / prevAvg) * 100).toFixed(1));
+
+  let highestRiskPeriod: DecisionAnalysis['highestRiskPeriod'];
+  if (sorted.length > 3) {
+    let maxAvg = 0;
+    let maxWindow = 0;
+
+    for (let i = 0; i <= sorted.length - 3; i++) {
+      const window = sorted.slice(i, i + 3);
+      const windowAvg = window.reduce((a, d) => a + d.riskScore, 0) / window.length;
+      if (windowAvg > maxAvg) {
+        maxAvg = windowAvg;
+        maxWindow = i;
+      }
+    }
+
+    const window = sorted.slice(maxWindow, maxWindow + 3);
+    highestRiskPeriod = {
+      startDate: window[0].createdAt,
+      endDate: window[window.length - 1].createdAt,
+      avgRiskScore: Number(maxAvg.toFixed(2)),
+      decisionCount: window.length,
+    };
+  }
+
+  let riskDaysStreak = 0;
+  for (let i = sorted.length - 1; i >= 0; i--) {
+    const dayStart = new Date(sorted[i].createdAt);
+    dayStart.setHours(0, 0, 0, 0);
+
+    const dayDecisions = sorted.filter((d) => {
+      const dDay = new Date(d.createdAt);
+      dDay.setHours(0, 0, 0, 0);
+      return dDay.getTime() === dayStart.getTime();
+    });
+
+    if (dayDecisions.some((d) => d.riskLevel === 'high')) {
+      riskDaysStreak++;
+    } else {
+      break;
+    }
+  }
+
+  let decisionMomentum: 'improving' | 'declining' | 'stable' = 'stable';
+  if (riskTrend < -10) {
+    decisionMomentum = 'improving';
+  } else if (riskTrend > 10) {
+    decisionMomentum = 'declining';
+  }
+
+  const tagRiskMap = new Map<string, { avgRisk: number; count: number }>();
+  for (const decision of sorted) {
+    for (const tag of decision.tags) {
+      if (!tagRiskMap.has(tag)) {
+        tagRiskMap.set(tag, { avgRisk: 0, count: 0 });
+      }
+
+      const tagData = tagRiskMap.get(tag)!;
+      tagData.avgRisk = (tagData.avgRisk * tagData.count + decision.riskScore) / (tagData.count + 1);
+      tagData.count++;
+      tagData.avgRisk = Number(tagData.avgRisk.toFixed(2));
+    }
+  }
+
+  return {
+    totalDecisions: sorted.length,
+    avgRiskScore,
+    medianRiskScore: Number(medianRiskScore.toFixed(2)),
+    riskDistribution,
+    riskTrend,
+    highestRiskPeriod,
+    riskDaysStreak: riskDaysStreak > 0 ? riskDaysStreak : undefined,
+    decisionMomentum,
+    tagRiskMap,
+  };
+}
+
+export function detectRiskAlerts(analysis: DecisionAnalysis, decisions: DecisionSnapshot[]): RiskAlert[] {
+  const alerts: RiskAlert[] = [];
+
+  if (analysis.avgRiskScore > 65) {
+    alerts.push({
+      severity: analysis.avgRiskScore > 75 ? 'critical' : 'high',
+      message: 'Average decision risk is elevated.',
+      reason: `Average risk score is ${analysis.avgRiskScore}, indicating consistently risky decisions.`,
+      recommendation: 'Review recent decisions and identify common risk factors. Consider more deliberate planning before major decisions.',
+      confidence: 0.9,
+      affectedDecisions: decisions.filter((d) => d.riskScore > 60).map((d) => d.id),
+    });
+  }
+
+  if (analysis.riskTrend > 20) {
+    alerts.push({
+      severity: 'high',
+      message: 'Risk trend is sharply increasing.',
+      reason: `Risk scores have increased ${analysis.riskTrend}% recently.`,
+      recommendation: 'Recent decisions are riskier than historical patterns. Take time to assess root causes.',
+      confidence: 0.85,
+      affectedDecisions: decisions.slice(-7).map((d) => d.id),
+    });
+  }
+
+  if (analysis.riskDaysStreak && analysis.riskDaysStreak >= 3) {
+    alerts.push({
+      severity: 'high',
+      message: `${analysis.riskDaysStreak} consecutive days with high-risk decisions.`,
+      reason: `High-risk decisions detected on ${analysis.riskDaysStreak} consecutive days.`,
+      recommendation: 'This streak suggests mounting pressure or fatigue. Consider taking a break before making further major decisions.',
+      confidence: 0.95,
+      affectedDecisions: decisions
+        .filter((d) => d.riskLevel === 'high' && new Date().getTime() - d.createdAt.getTime() < 3 * 24 * 60 * 60 * 1000)
+        .map((d) => d.id),
+    });
+  }
+
+  const highRiskPercent = (analysis.riskDistribution.high / analysis.totalDecisions) * 100;
+  if (highRiskPercent > 50) {
+    alerts.push({
+      severity: 'medium',
+      message: `${highRiskPercent.toFixed(0)}% of decisions are high-risk.`,
+      reason: 'More than half of recent decisions fall into the high-risk category.',
+      recommendation: 'Evaluate whether risk appetite has increased or if decisions are becoming harder. Seek diverse perspectives.',
+      confidence: 0.8,
+      affectedDecisions: decisions.filter((d) => d.riskLevel === 'high').map((d) => d.id),
+    });
+  }
+
+  for (const [tag, data] of analysis.tagRiskMap) {
+    if (data.avgRisk > 70 && data.count >= 3) {
+      alerts.push({
+        severity: 'medium',
+        message: `Tag "${tag}" is associated with high risk (avg: ${data.avgRisk}).`,
+        reason: `Decisions tagged "${tag}" average ${data.avgRisk} risk across ${data.count} decisions.`,
+        recommendation: `Be cautious with decisions tagged "${tag}". Consider additional due diligence or expert consultation.`,
+        confidence: 0.75,
+        affectedDecisions: decisions.filter((d) => d.tags.includes(tag)).map((d) => d.id),
+      });
+    }
+  }
+
+  const severityRank: Record<string, number> = { critical: 4, high: 3, medium: 2, low: 1 };
+  alerts.sort((a, b) => severityRank[b.severity] - severityRank[a.severity]);
+
+  return alerts.slice(0, 5);
+}
+
+export function computeDecisionQualityScore(analysis: DecisionAnalysis): number {
+  let score = 100;
+
+  score -= Math.min(50, (analysis.avgRiskScore / 100) * 50);
+
+  if (analysis.riskTrend > 0) {
+    score -= Math.min(15, (analysis.riskTrend / 100) * 15);
+  }
+
+  if (analysis.riskDaysStreak && analysis.riskDaysStreak >= 3) {
+    score -= 10 * Math.min(3, analysis.riskDaysStreak);
+  }
+
+  return Math.max(0, Number(score.toFixed(1)));
+}
