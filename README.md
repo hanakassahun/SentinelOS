@@ -135,6 +135,63 @@ Designed for clarity, performance, and analytical flexibility.
 
 ---
 
+## 🧠 Intelligence System Deep Dive
+
+The intelligence layer is the heart of sentinelOS. It turns raw behavioral events into explainable guidance through three connected stages:
+
+1. Rule-based correlator
+   - Aggregates task outcomes by hour block
+   - Measures success rates and flags risky time windows
+   - Produces structured insights for time-of-day friction
+
+2. Background insight queue
+   - Uses BullMQ with Redis to process analytics asynchronously
+   - Keeps the main server responsive while insight generation runs in the background
+   - Persists high-risk findings into the shared Prisma insight model
+
+3. Python anomaly service
+   - FastAPI endpoint at `python-service/main.py`
+   - Uses Isolation Forest over energy, cognitive load, and consecutive-hours inputs
+   - Flags anomalous task clusters for restorative planning recommendations
+
+### Runtime workflow
+
+```powershell
+cd server
+npm install
+npm run dev
+```
+
+```powershell
+cd client
+npm install
+npm run dev
+```
+
+Useful insight endpoints:
+
+```powershell
+curl http://localhost:3000/api/insights
+curl http://localhost:3000/api/insights?force=true
+curl http://localhost:3000/api/insights/history
+```
+
+### Persistence model
+
+Insights are persisted through the Prisma `Insight` model and stored in the shared database layer, so the system can both serve live recommendations and retain historical reasoning over time.
+
+### Active project layout
+
+Keep the focus on the active runtime code:
+
+- `client/` → Next.js frontend
+- `server/` → Express API, queues, Prisma access, and intelligence workers
+- `prisma/` → shared schema and seed assets
+- `python-service/` → FastAPI anomaly detection service
+- `docs/` → architecture and data model references
+
+---
+
 ## 🎯 Why I Built This
 
 Most software helps users stay organized.
