@@ -1,6 +1,6 @@
 import { Queue, Worker } from 'bullmq';
 import prisma from '../services/prismaClient';
-import { calculateTimeBlockSuccess } from '../../intelligence/correlator';
+import { calculateTimeBlockSuccess } from '../intelligence/correlator';
 
 const redisConnection = {
   host: process.env.REDIS_HOST ?? 'localhost',
