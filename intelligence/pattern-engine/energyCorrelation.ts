@@ -1,8 +1,5 @@
 import { BehavioralEvent } from '../types';
 
-  // placeholder: correlate energy levels with outcomes
-  return { summary: 'energy correlation placeholder' };
-}
 export function correlateEnergy(events: BehavioralEvent[]) {
   // Correlate energy levels with success/failure
   const withEnergy = events.filter(e => typeof e.energyLevel === 'number' && e.outcome);

@@ -1,8 +1,5 @@
 import { BehavioralEvent } from '../types';
 
-  // placeholder: compute success rates by time block
-  return { summary: 'time analysis placeholder' };
-}
 export function analyzeByTime(events: BehavioralEvent[]) {
   // Group events by time block (morning, afternoon, evening, night)
   const blocks = [

@@ -46,7 +46,8 @@ export async function storeAnalyticsSnapshot(userId: string): Promise<void> {
     await prisma.insight.create({
       data: {
         userId,
-        type: 'RECOMMENDATION',
+        // Use existing InsightType enum values; store recommendations under AVERAGE
+        type: 'AVERAGE',
         message: rec.title,
         recommendation: rec.description,
         priority: rec.priority,
@@ -69,7 +70,8 @@ export async function storeAnalyticsSnapshot(userId: string): Promise<void> {
     await prisma.insight.create({
       data: {
         userId,
-        type: 'RISK_ALERT',
+        // Map risk alerts to TREND InsightType
+        type: 'TREND',
         message: alert.message,
         recommendation: alert.recommendation,
         priority: alert.severity === 'critical' ? 'high' : alert.severity === 'high' ? 'high' : 'medium',
@@ -79,6 +81,8 @@ export async function storeAnalyticsSnapshot(userId: string): Promise<void> {
           confidence: alert.confidence,
           affectedDecisions: alert.affectedDecisions,
         },
+        // prisma requires 'insights' Json field; provide empty object when none
+        insights: {},
       },
     });
   }

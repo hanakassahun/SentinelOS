@@ -236,16 +236,15 @@ export function analyzeBehavior(events: BehavioralEvent[], energyData?: number[]
     .filter((e) => e.moodLevel !== undefined)
     .map((e) => e.moodLevel!);
 
-  let energyOutcomeCorrelation: number | undefined;
-  let moodOutcomeCorrelation: number | undefined;
+  const maybeEnergyCorr = outcomeNumeric.length === energyValues.length && energyValues.length > 1
+    ? computePearsonCorrelation(energyValues, outcomeNumeric)
+    : null;
+  const maybeMoodCorr = outcomeNumeric.length === moodValues.length && moodValues.length > 1
+    ? computePearsonCorrelation(moodValues, outcomeNumeric)
+    : null;
 
-  if (outcomeNumeric.length === energyValues.length && energyValues.length > 1) {
-    energyOutcomeCorrelation = computePearsonCorrelation(energyValues, outcomeNumeric);
-  }
-
-  if (outcomeNumeric.length === moodValues.length && moodValues.length > 1) {
-    moodOutcomeCorrelation = computePearsonCorrelation(moodValues, outcomeNumeric);
-  }
+  let energyOutcomeCorrelation: number | undefined = maybeEnergyCorr !== null ? maybeEnergyCorr : undefined;
+  let moodOutcomeCorrelation: number | undefined = maybeMoodCorr !== null ? maybeMoodCorr : undefined;
 
   // Consistency score: average success rate variance across task types
   const successRates = taskTypeStats.map((t) => t.successRate);
@@ -308,4 +307,92 @@ function computePearsonCorrelation(x: number[], y: number[]): number | null {
 
   const denom = Math.sqrt(sumX2 * sumY2);
   return denom === 0 ? null : Number((sumXY / denom).toFixed(3));
+}
+
+/**
+ * Generate actionable behavioral insights
+ * @param analysis Behavioral analysis
+ * @returns Array of behavioral insights
+ */
+export function generateBehavioralInsights(analysis: BehavioralAnalysis): BehavioralInsight[] {
+  const insights: BehavioralInsight[] = [];
+
+  // High success rate strength
+  if (analysis.overallSuccessRate > 75) {
+    insights.push({
+      type: 'strength',
+      title: 'Exceptional Success Rate',
+      description: `You're succeeding ${analysis.overallSuccessRate}% of the time. This is excellent!`,
+      metric: analysis.overallSuccessRate,
+      priority: 'medium',
+      actionable: "Maintain current strategies and document what's working for consistent replication.",
+    });
+  }
+
+  // Best time block opportunity
+  if (analysis.bestPerformingTimeBlock && analysis.bestPerformingTimeBlock.successRate > 70) {
+    insights.push({
+      type: 'opportunity',
+      title: `Peak Performance: ${analysis.bestPerformingTimeBlock.label}`,
+      description: `Your success rate during ${analysis.bestPerformingTimeBlock.label.toLowerCase()} is ${analysis.bestPerformingTimeBlock.successRate}%.`,
+      metric: analysis.bestPerformingTimeBlock.successRate,
+      priority: 'high',
+      actionable: `Schedule your most important and difficult tasks during ${analysis.bestPerformingTimeBlock.label.toLowerCase()}.`,
+    });
+  }
+
+  // Worst time block weakness
+  if (analysis.worstPerformingTimeBlock && analysis.worstPerformingTimeBlock.successRate < 50) {
+    insights.push({
+      type: 'weakness',
+      title: `Challenging Period: ${analysis.worstPerformingTimeBlock.label}`,
+      description: `Your success rate during ${analysis.worstPerformingTimeBlock.label.toLowerCase()} is only ${analysis.worstPerformingTimeBlock.successRate}%.`,
+      metric: analysis.worstPerformingTimeBlock.successRate,
+      priority: 'high',
+      actionable: `Avoid scheduling critical tasks during ${analysis.worstPerformingTimeBlock.label.toLowerCase()}. If unavoidable, allocate extra time and resources.`,
+    });
+  }
+
+  // Energy correlation
+  if (analysis.energyOutcomeCorrelation && analysis.energyOutcomeCorrelation > 0.6) {
+    insights.push({
+      type: 'pattern',
+      title: 'Strong Energy-Success Link',
+      description: 'Your energy level has a strong positive correlation with success.',
+      metric: analysis.energyOutcomeCorrelation * 100,
+      priority: 'high',
+      actionable: 'Prioritize maintaining high energy through rest, nutrition, and exercise. Energy management is key to your success.',
+    });
+  }
+
+  // Low consistency warning
+  if (analysis.consistencyScore < 40) {
+    insights.push({
+      type: 'weakness',
+      title: 'Inconsistent Performance Across Tasks',
+      description: `Your success rate varies significantly across different task types (consistency: ${analysis.consistencyScore}%).`,
+      metric: analysis.consistencyScore,
+      priority: 'medium',
+      actionable: 'Identify what makes certain tasks more successful than others. Look for common factors in your most successful tasks.',
+    });
+  }
+
+  // Task type opportunity
+  const bestTaskType = analysis.taskTypeStats[0];
+  if (bestTaskType && bestTaskType.successRate > 80) {
+    insights.push({
+      type: 'strength',
+      title: `Master of ${bestTaskType.taskType} Tasks`,
+      description: `You excel at ${bestTaskType.taskType} tasks with ${bestTaskType.successRate}% success rate.`,
+      metric: bestTaskType.successRate,
+      priority: 'low',
+      actionable: 'Your expertise in this area is a strength. Consider leveraging it in other work areas or mentoring others.',
+    });
+  }
+
+  // Sort by priority
+  const priorityRank = { high: 3, medium: 2, low: 1 } as Record<string, number>;
+  insights.sort((a, b) => priorityRank[b.priority] - priorityRank[a.priority]);
+
+  return insights.slice(0, 5);
 }

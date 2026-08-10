@@ -8,5 +8,5 @@ console.log('avg up', calculateAverage(up));
 console.log('trend up', detectTrend(up));
 console.log('trend down', detectTrend(down));
 console.log('trend stable', detectTrend(stable));
-console.log('corr up-down', correlateEnergy(up.map(v=>({energyLevel:v,outcome:'success'} as any)).map(e=>e.energyLevel), down.map(v=>({energyLevel:v,outcome:'fail'} as any)).map(e=>e.energyLevel)));
-console.log('corr up-up', correlateEnergy(up.map(v=>({energyLevel:v,outcome:'success'} as any)).map(e=>e.energyLevel), up.map(v=>({energyLevel:v,outcome:'success'} as any)).map(e=>e.energyLevel)));
+console.log('corr up-down', correlateEnergy(up.map(v=>({energyLevel:v,outcome:'success'} as any))));
+console.log('corr up-up', correlateEnergy(up.map(v=>({energyLevel:v,outcome:'success'} as any))));

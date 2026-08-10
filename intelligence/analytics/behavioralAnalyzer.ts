@@ -236,16 +236,15 @@ export function analyzeBehavior(events: BehavioralEvent[], energyData?: number[]
     .filter((e) => e.moodLevel !== undefined)
     .map((e) => e.moodLevel!);
 
-  let energyOutcomeCorrelation: number | undefined;
-  let moodOutcomeCorrelation: number | undefined;
+    const maybeEnergyCorr = outcomeNumeric.length === energyValues.length && energyValues.length > 1
+      ? computePearsonCorrelation(energyValues, outcomeNumeric)
+      : null;
+    const maybeMoodCorr = outcomeNumeric.length === moodValues.length && moodValues.length > 1
+      ? computePearsonCorrelation(moodValues, outcomeNumeric)
+      : null;
 
-  if (outcomeNumeric.length === energyValues.length && energyValues.length > 1) {
-    energyOutcomeCorrelation = computePearsonCorrelation(energyValues, outcomeNumeric);
-  }
-
-  if (outcomeNumeric.length === moodValues.length && moodValues.length > 1) {
-    moodOutcomeCorrelation = computePearsonCorrelation(moodValues, outcomeNumeric);
-  }
+    let energyOutcomeCorrelation: number | undefined = maybeEnergyCorr !== null ? maybeEnergyCorr : undefined;
+    let moodOutcomeCorrelation: number | undefined = maybeMoodCorr !== null ? maybeMoodCorr : undefined;
 
   // Consistency score: average success rate variance across task types
   const successRates = taskTypeStats.map((t) => t.successRate);

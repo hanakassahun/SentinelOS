@@ -1,8 +1,5 @@
 import { BehavioralEvent } from '../types';
 
-  // placeholder: compute success/failure rates per task type
-  return { summary: 'success rate placeholder' };
-}
 export function computeSuccessRate(events: BehavioralEvent[]) {
   // Compute success/failure rates per task type
   const taskTypes = Array.from(new Set(events.map(e => e.taskType || 'unknown')));
