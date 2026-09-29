@@ -1,31 +1,50 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Request, Response } from 'express';
 
-const { findMany, create } = vi.hoisted(() => ({
-  findMany: vi.fn(),
-  create: vi.fn(),
+const { getReport, refreshReport, enqueue } = vi.hoisted(() => ({
+  getReport: vi.fn(),
+  refreshReport: vi.fn(),
+  enqueue: vi.fn(),
 }));
 
 vi.mock('../../services/prismaClient', () => ({
   default: {
-    log: { findMany },
-    insight: { create },
+    insight: { findMany: vi.fn(), delete: vi.fn() },
   },
 }));
 
 vi.mock('../../queues/insightQueue', () => ({
-  insightQueue: { add: vi.fn() },
+  enqueueInsightGeneration: enqueue,
 }));
 
-import { getInsights } from '../../api/controllers/insightsController';
+vi.mock('../../services/insightService', () => ({
+  getBehavioralInsightReport: getReport,
+  refreshInsights: refreshReport,
+}));
+
+import { getInsights, triggerInsightQueue } from '../../api/controllers/insightsController';
 
 describe('getInsights with insufficient source data', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    findMany.mockResolvedValue([]);
+    getReport.mockResolvedValue({
+      userId: 'default',
+      analysis: { totalEvents: 0 },
+      insights: [],
+      timeBlocks: [],
+      events: [],
+    });
+    refreshReport.mockResolvedValue({
+      userId: 'default',
+      analysis: { totalEvents: 0 },
+      insights: [],
+      timeBlocks: [],
+      events: [],
+    });
+    enqueue.mockResolvedValue({ queued: false, completed: true });
   });
 
-  it('returns an empty analysis without persisting a placeholder insight', async () => {
+  it('uses the canonical report and returns the current event analysis', async () => {
     const response = {
       json: vi.fn(),
       status: vi.fn().mockReturnThis(),
@@ -35,8 +54,36 @@ describe('getInsights with insufficient source data', () => {
 
     expect(response.json).toHaveBeenCalledWith({
       insights: [],
-      analysis: { totalLogs: 0 },
+      analysis: { totalEvents: 0 },
+      timeBlocks: [],
     });
-    expect(create).not.toHaveBeenCalled();
+    expect(refreshReport).toHaveBeenCalledWith('default');
+    expect(getReport).not.toHaveBeenCalled();
+  });
+
+  it('uses the read-only behavioral report when force is omitted', async () => {
+    const response = { json: vi.fn() } as unknown as Response;
+
+    await getInsights({ query: {} } as unknown as Request, response);
+
+    expect(getReport).toHaveBeenCalledWith('default');
+    expect(refreshReport).not.toHaveBeenCalled();
+  });
+
+  it('returns service unavailable when Redis-mode enqueue fails', async () => {
+    enqueue.mockRejectedValue(new Error('Redis unavailable'));
+    vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    const response = {
+      json: vi.fn(),
+      status: vi.fn().mockReturnThis(),
+    } as unknown as Response;
+
+    await triggerInsightQueue(
+      { body: { userId: 'user-1' } } as unknown as Request,
+      response,
+    );
+
+    expect(response.status).toHaveBeenCalledWith(503);
+    expect(response.json).toHaveBeenCalledWith({ error: 'Insight queue unavailable' });
   });
 });
