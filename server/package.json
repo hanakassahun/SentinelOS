@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "build": "tsc",
     "dev": "ts-node-dev --respawn --transpile-only scripts/start_dev_server.ts",
-    "start": "node dist/server/app.js",
+    "start": "node dist/server/scripts/start_dev_server.js",
     "test:analytics": "ts-node scripts/test_analytics_service.ts",
+    "test": "vitest run",
     "test:intelligence": "vitest run",
     "seed": "ts-node prisma/seed.ts",
     "prisma:generate": "prisma generate --schema ../prisma/schema.prisma",

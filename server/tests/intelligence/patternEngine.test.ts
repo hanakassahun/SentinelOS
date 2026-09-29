@@ -54,14 +54,22 @@ const events: BehavioralEvent[] = [
 
 describe('pattern engine characterization', () => {
   it('computes per-task success rates and failure clusters', () => {
-    expect(computeSuccessRate(events)).toMatchSnapshot();
+    const result = computeSuccessRate(events);
+    expect(result).toMatchSnapshot();
+    expect(result.stats.find((stat) => stat.taskType === 'review')?.successRate).toBe(100);
+    expect(result.failureClusters.map((cluster) => cluster.label)).toEqual(['Night', 'Afternoon']);
   });
 
   it('computes success rates by time block', () => {
-    expect(analyzeByTime(events)).toMatchSnapshot();
+    const result = analyzeByTime(events);
+    expect(result).toMatchSnapshot();
+    expect(result.blockStats.find((block) => block.label === 'Night')?.successRate).toBe(0);
+    expect(result.blockStats.find((block) => block.label === 'Morning')?.successRate).toBe(100);
   });
 
   it('computes the energy and outcome correlation', () => {
-    expect(correlateEnergy(events)).toMatchSnapshot();
+    const result = correlateEnergy(events);
+    expect(result).toMatchSnapshot();
+    expect(result.correlation).toBeGreaterThan(0);
   });
 });

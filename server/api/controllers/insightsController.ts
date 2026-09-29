@@ -11,13 +11,8 @@ import {
 import { insightQueue } from '../../queues/insightQueue';
 import { getCachedInsights, invalidateCachedInsights } from '../../services/cachedInsights';
 
-// Simple in-memory cache for analysis/insights (per-process). Cached for 24h by default.
-let cached: { ts: number; insights: any[]; analysis: any } | null = null;
-let CACHE_TTL_MS = 24 * 60 * 60 * 1000;
-
 export async function getInsights(req: Request, res: Response) {
   try {
-    const now = Date.now();
     const force = req.query && String(req.query.force) === 'true';
     const userId = String(req.query.userId || 'default');
 
@@ -42,18 +37,7 @@ export async function getInsights(req: Request, res: Response) {
 
     // Minimum data guard
     if (!logs || logs.length < 5) {
-      // persist empty result briefly to avoid repeated cheap requests
-      await prisma.insight.create({
-        data: {
-          type: 'TREND',
-          message: 'Cached empty insight result',
-          priority: 'low',
-          insights: [] as any,
-          analysis: { totalLogs: logs ? logs.length : 0 } as any,
-        },
-      });
-      cached = { ts: Date.now(), insights: [], analysis: { totalLogs: logs ? logs.length : 0 } };
-      return res.json({ insights: [], analysis: cached.analysis });
+      return res.json({ insights: [], analysis: { totalLogs: logs ? logs.length : 0 } });
     }
 
     const energyLogs = logs.map((l) => ({ value: l.value, timestamp: l.timestamp.toISOString() }));
@@ -73,8 +57,6 @@ export async function getInsights(req: Request, res: Response) {
     });
     invalidateCachedInsights(userId);
 
-    // Update in-process cache
-    cached = { ts: Date.now(), insights, analysis };
     res.json({ insights, analysis });
   } catch (err) {
     console.error(err);
@@ -105,9 +87,6 @@ export async function deleteInsight(req: Request, res: Response) {
 
 export async function refreshInsights(_req: Request, res: Response) {
   try {
-    // call getInsights with force=true behavior: recompute and persist
-    // We simulate by clearing in-memory cache and calling generator path
-    cached = null;
     const fakeReq = { query: { force: 'true' } } as any;
     // reuse existing function to recompute
     return await getInsights(fakeReq, res as any);
