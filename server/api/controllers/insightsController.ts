@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import prisma from '../../services/prismaClient';
-import { insightQueue } from '../../queues/insightQueue';
+import { enqueueInsightGeneration } from '../../queues/insightQueue';
 import { getBehavioralInsightReport, refreshInsights as persistInsights } from '../../services/insightService';
 
 function toInsightResponse(report: Awaited<ReturnType<typeof getBehavioralInsightReport>>) {
@@ -68,8 +68,8 @@ export async function triggerInsightQueue(req: Request, res: Response) {
   try {
     const userId = String(req.body?.userId || req.query.userId || 'default');
 
-    await insightQueue.add('generate', { userId });
-    res.json({ ok: true, queued: true, userId });
+    const result = await enqueueInsightGeneration(userId);
+    res.json({ ok: true, userId, ...result });
   } catch (err) {
     console.error('Failed to enqueue insight generation', err);
     res.status(503).json({ error: 'Insight queue unavailable' });

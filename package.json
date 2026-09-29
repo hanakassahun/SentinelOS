@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "node dist/server/app.js",
+    "start": "npm --prefix server start",
     "seed": "node prisma/seed.js"
   },
   "devDependencies": {
