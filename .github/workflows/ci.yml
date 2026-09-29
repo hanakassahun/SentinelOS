@@ -23,6 +23,9 @@ jobs:
       - name: Install server deps
         working-directory: ./server
         run: npm ci
+      - name: Generate Prisma client
+        working-directory: ./server
+        run: npm run prisma:generate
       - name: Install client deps
         working-directory: ./client
         run: npm ci
