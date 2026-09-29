@@ -1,0 +1,109 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`pattern engine characterization > computes per-task success rates and failure clusters 1`] = `
+{
+  "consistencyScore": 0.775,
+  "failureClusters": [
+    {
+      "count": 1,
+      "failures": [
+        {
+          "createdAt": "2025-01-06T02:00:00",
+          "energyLevel": 1,
+          "executedTime": "2025-01-06T02:00:00",
+          "id": "event-1",
+          "outcome": "fail",
+          "taskType": "writing",
+          "userId": "user-1",
+        },
+      ],
+      "label": "Night",
+    },
+    {
+      "count": 1,
+      "failures": [
+        {
+          "createdAt": "2025-01-06T14:00:00",
+          "energyLevel": 2,
+          "executedTime": "2025-01-06T14:00:00",
+          "id": "event-3",
+          "outcome": "fail",
+          "taskType": "coding",
+          "userId": "user-1",
+        },
+      ],
+      "label": "Afternoon",
+    },
+  ],
+  "stats": [
+    {
+      "failureRate": 50,
+      "failures": 1,
+      "successRate": 50,
+      "successes": 1,
+      "taskType": "writing",
+      "total": 2,
+    },
+    {
+      "failureRate": 50,
+      "failures": 1,
+      "successRate": 50,
+      "successes": 1,
+      "taskType": "coding",
+      "total": 2,
+    },
+    {
+      "failureRate": 0,
+      "failures": 0,
+      "successRate": 100,
+      "successes": 1,
+      "taskType": "review",
+      "total": 1,
+    },
+  ],
+}
+`;
+
+exports[`pattern engine characterization > computes success rates by time block 1`] = `
+{
+  "blockStats": [
+    {
+      "label": "Night",
+      "successRate": 0,
+      "successes": 0,
+      "total": 1,
+    },
+    {
+      "label": "Morning",
+      "successRate": 100,
+      "successes": 1,
+      "total": 1,
+    },
+    {
+      "label": "Afternoon",
+      "successRate": 0,
+      "successes": 0,
+      "total": 1,
+    },
+    {
+      "label": "Evening",
+      "successRate": 100,
+      "successes": 1,
+      "total": 1,
+    },
+    {
+      "label": "Late",
+      "successRate": 100,
+      "successes": 1,
+      "total": 1,
+    },
+  ],
+}
+`;
+
+exports[`pattern engine characterization > computes the energy and outcome correlation 1`] = `
+{
+  "correlation": 0.866,
+  "summary": "Energy-success correlation: 0.866",
+}
+`;
