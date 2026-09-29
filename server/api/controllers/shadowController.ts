@@ -1,23 +1,25 @@
 import { Request, Response } from 'express';
 import prisma from '../../services/prismaClient';
-import { calculateTimeBlockSuccess } from '../../intelligence/correlator';
+import { getTimeBlockPerformance } from '../../services/insightService';
 
 function formatLabel(hour: number) {
   const hh = hour.toString().padStart(2, '0');
   return `${hh}:00`;
 }
 
+function toShadowPoints(blocks: Awaited<ReturnType<typeof getTimeBlockPerformance>>) {
+  return blocks.map((block) => ({
+    hour: block.hourBlock,
+    label: formatLabel(block.hourBlock),
+    riskScore: block.successRate === null ? null : Math.round(100 - block.successRate),
+    evidence: block.totalTasks === 0 ? 'insufficient data' : block.riskFlag ? 'high friction' : 'normal',
+  }));
+}
+
 export async function getShadowSchedule(req: Request, res: Response) {
   try {
     const userId = String(req.query.userId || 'default');
-    const blocks = await calculateTimeBlockSuccess(userId);
-
-    const points = blocks.map((b) => ({
-      hour: b.hourBlock,
-      label: formatLabel(b.hourBlock),
-      riskScore: Math.round(100 - b.successRate),
-      evidence: b.riskFlag ? 'high friction' : 'normal',
-    }));
+    const points = toShadowPoints(await getTimeBlockPerformance(userId));
 
     res.json({ success: true, userId, points });
   } catch (err) {
@@ -32,8 +34,7 @@ export async function saveShadowSnapshot(req: Request, res: Response) {
     let points = req.body?.points as any[] | undefined;
 
     if (!points) {
-      const blocks = await calculateTimeBlockSuccess(userId);
-      points = blocks.map((b) => ({ hour: b.hourBlock, label: formatLabel(b.hourBlock), riskScore: Math.round(100 - b.successRate), evidence: b.riskFlag ? 'high friction' : 'normal' }));
+      points = toShadowPoints(await getTimeBlockPerformance(userId));
     }
 
     const saved = await prisma.insight.create({

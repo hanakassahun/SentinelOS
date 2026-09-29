@@ -1,4 +1,4 @@
-import { BehavioralEvent } from '../../types';
+import type { BehavioralEvent } from '../types';
 
 export function analyzeByTime(events: BehavioralEvent[]) {
   const blocks = [

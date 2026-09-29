@@ -1,0 +1,150 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`pure time-block correlation > returns every hour with deterministic success statistics 1`] = `
+[
+  {
+    "hourBlock": 0,
+    "riskFlag": false,
+    "successRate": null,
+    "totalTasks": 0,
+  },
+  {
+    "hourBlock": 1,
+    "riskFlag": false,
+    "successRate": null,
+    "totalTasks": 0,
+  },
+  {
+    "hourBlock": 2,
+    "riskFlag": false,
+    "successRate": null,
+    "totalTasks": 0,
+  },
+  {
+    "hourBlock": 3,
+    "riskFlag": false,
+    "successRate": null,
+    "totalTasks": 0,
+  },
+  {
+    "hourBlock": 4,
+    "riskFlag": false,
+    "successRate": null,
+    "totalTasks": 0,
+  },
+  {
+    "hourBlock": 5,
+    "riskFlag": false,
+    "successRate": null,
+    "totalTasks": 0,
+  },
+  {
+    "hourBlock": 6,
+    "riskFlag": false,
+    "successRate": null,
+    "totalTasks": 0,
+  },
+  {
+    "hourBlock": 7,
+    "riskFlag": false,
+    "successRate": null,
+    "totalTasks": 0,
+  },
+  {
+    "hourBlock": 8,
+    "riskFlag": false,
+    "successRate": null,
+    "totalTasks": 0,
+  },
+  {
+    "hourBlock": 9,
+    "riskFlag": true,
+    "successRate": 0,
+    "totalTasks": 3,
+  },
+  {
+    "hourBlock": 10,
+    "riskFlag": false,
+    "successRate": 50,
+    "totalTasks": 2,
+  },
+  {
+    "hourBlock": 11,
+    "riskFlag": false,
+    "successRate": 100,
+    "totalTasks": 1,
+  },
+  {
+    "hourBlock": 12,
+    "riskFlag": false,
+    "successRate": null,
+    "totalTasks": 0,
+  },
+  {
+    "hourBlock": 13,
+    "riskFlag": false,
+    "successRate": null,
+    "totalTasks": 0,
+  },
+  {
+    "hourBlock": 14,
+    "riskFlag": false,
+    "successRate": null,
+    "totalTasks": 0,
+  },
+  {
+    "hourBlock": 15,
+    "riskFlag": false,
+    "successRate": null,
+    "totalTasks": 0,
+  },
+  {
+    "hourBlock": 16,
+    "riskFlag": false,
+    "successRate": null,
+    "totalTasks": 0,
+  },
+  {
+    "hourBlock": 17,
+    "riskFlag": false,
+    "successRate": null,
+    "totalTasks": 0,
+  },
+  {
+    "hourBlock": 18,
+    "riskFlag": false,
+    "successRate": null,
+    "totalTasks": 0,
+  },
+  {
+    "hourBlock": 19,
+    "riskFlag": false,
+    "successRate": null,
+    "totalTasks": 0,
+  },
+  {
+    "hourBlock": 20,
+    "riskFlag": false,
+    "successRate": null,
+    "totalTasks": 0,
+  },
+  {
+    "hourBlock": 21,
+    "riskFlag": false,
+    "successRate": null,
+    "totalTasks": 0,
+  },
+  {
+    "hourBlock": 22,
+    "riskFlag": false,
+    "successRate": null,
+    "totalTasks": 0,
+  },
+  {
+    "hourBlock": 23,
+    "riskFlag": false,
+    "successRate": null,
+    "totalTasks": 0,
+  },
+]
+`;

@@ -1,4 +1,4 @@
-import { BehavioralEvent } from '../../types';
+import type { BehavioralEvent } from '../types';
 
 export function computeSuccessRate(events: BehavioralEvent[]) {
   const taskTypes = Array.from(new Set(events.map(e => e.taskType || 'unknown')));
@@ -40,7 +40,7 @@ export function computeSuccessRate(events: BehavioralEvent[]) {
 
   const execTimes = events
     .map(e => e.executedTime || e.plannedTime)
-    .filter(Boolean)
+    .filter((time): time is string => typeof time === 'string')
     .map(t => new Date(t).getTime());
   let consistencyScore = null;
   if (execTimes.length > 1) {

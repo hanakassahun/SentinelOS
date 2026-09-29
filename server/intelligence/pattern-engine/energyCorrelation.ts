@@ -1,4 +1,4 @@
-import { BehavioralEvent } from '../../types';
+import type { BehavioralEvent } from '../types';
 
 export function correlateEnergy(events: BehavioralEvent[]) {
   // Correlate energy levels with success/failure
@@ -8,7 +8,7 @@ export function correlateEnergy(events: BehavioralEvent[]) {
   const outcome = withEnergy.map(e => e.outcome === 'success' ? 1 : 0);
   const n = energy.length;
   const avgE = energy.reduce((a, b) => a + b, 0) / n;
-  const avgO = outcome.reduce((a, b) => a + b, 0) / n;
+  const avgO = outcome.reduce<number>((a, b) => a + b, 0) / n;
   let num = 0, denE = 0, denO = 0;
   for (let i = 0; i < n; i++) {
     const dE = energy[i] - avgE;

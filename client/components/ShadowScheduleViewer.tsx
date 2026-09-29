@@ -2,13 +2,13 @@
 import React, { useMemo, useState } from 'react';
 
 interface ShadowScheduleViewerProps {
-  points: Array<{ hour: number; label: string; riskScore: number; evidence: string }>;
+  points: Array<{ hour: number; label: string; riskScore: number | null; evidence: string }>;
 }
 
 export default function ShadowScheduleViewer({ points }: ShadowScheduleViewerProps) {
   const [showHistoricalReality, setShowHistoricalReality] = useState(true);
 
-  const maxRisk = useMemo(() => Math.max(...points.map((point) => point.riskScore), 1), [points]);
+  const maxRisk = useMemo(() => Math.max(...points.map((point) => point.riskScore ?? 0), 1), [points]);
 
   return (
     <div style={{ marginTop: '1rem' }}>
@@ -24,9 +24,9 @@ export default function ShadowScheduleViewer({ points }: ShadowScheduleViewerPro
               <div key={point.hour} style={{ display: 'grid', gridTemplateColumns: '60px 1fr 70px', gap: '0.5rem', alignItems: 'center' }}>
                 <strong>{point.label}</strong>
                 <div style={{ height: '0.65rem', borderRadius: '999px', background: 'rgba(255,255,255,0.12)', overflow: 'hidden' }}>
-                  <div style={{ width: `${Math.max(8, (point.riskScore / maxRisk) * 100)}%`, height: '100%', borderRadius: '999px', background: 'linear-gradient(90deg, rgba(248,113,113,0.95), rgba(250,204,21,0.95))' }} />
+                  <div style={{ width: point.riskScore === null ? '0%' : `${Math.max(8, (point.riskScore / maxRisk) * 100)}%`, height: '100%', borderRadius: '999px', background: 'linear-gradient(90deg, rgba(248,113,113,0.95), rgba(250,204,21,0.95))' }} />
                 </div>
-                <span style={{ fontSize: '0.875rem', color: '#fbbf24' }}>{point.riskScore}%</span>
+                <span style={{ fontSize: '0.875rem', color: '#fbbf24' }}>{point.riskScore === null ? 'No data' : `${point.riskScore}%`}</span>
               </div>
             ))}
           </div>
