@@ -1,5 +1,5 @@
 import { getLogs } from '../services/insightsService';
-import { generateInsights } from '../intelligence/insight-generator/generateInsights';
+import { generateInsights } from '../../intelligence/insight-generator/generateInsights';
 
 (async function(){
   const logs = await getLogs();

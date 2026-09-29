@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import type { BehavioralEvent } from '../../intelligence/types';
-import { correlateEnergy } from '../../intelligence/pattern-engine/energyCorrelation';
-import { computeSuccessRate } from '../../intelligence/pattern-engine/successRate';
-import { analyzeByTime } from '../../intelligence/pattern-engine/timeAnalysis';
+import type { BehavioralEvent } from '../../../intelligence/types';
+import { correlateEnergy } from '../../../intelligence/pattern-engine/energyCorrelation';
+import { computeSuccessRate } from '../../../intelligence/pattern-engine/successRate';
+import { analyzeByTime } from '../../../intelligence/pattern-engine/timeAnalysis';
 
 const events: BehavioralEvent[] = [
   {

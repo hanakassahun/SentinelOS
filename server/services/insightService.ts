@@ -1,8 +1,8 @@
 import { createHash } from 'node:crypto';
 import prisma from './prismaClient';
-import { correlateTimeBlocks } from '../intelligence/correlator';
-import type { PerformanceInsight } from '../intelligence/correlator';
-import type { TaskEvent } from '../intelligence/types';
+import { correlateTimeBlocks } from '../../intelligence/correlator';
+import type { PerformanceInsight } from '../../intelligence/correlator';
+import type { TaskEvent } from '../../intelligence/types';
 
 async function loadTimeBlockPerformance(userId: string): Promise<PerformanceInsight[]> {
   const rows = await prisma.behavioralEvent.findMany({

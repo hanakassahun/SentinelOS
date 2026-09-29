@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { correlateTimeBlocks } from '../../intelligence/correlator';
-import type { TaskEvent } from '../../intelligence/types';
+import { correlateTimeBlocks } from '../../../intelligence/correlator';
+import type { TaskEvent } from '../../../intelligence/types';
 
 const events: TaskEvent[] = [
   { executedTime: '2025-01-06T09:00:00', outcome: 'fail' },
