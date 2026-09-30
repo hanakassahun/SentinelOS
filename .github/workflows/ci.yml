@@ -26,6 +26,11 @@ jobs:
       - name: Generate Prisma client
         working-directory: ./server
         run: npm run prisma:generate
+      - name: Deploy migrations to clean database
+        working-directory: ./server
+        env:
+          DATABASE_URL: file:./ci.db
+        run: npm run prisma:deploy
       - name: Install client deps
         working-directory: ./client
         run: npm ci

@@ -7,120 +7,160 @@ datasource db {
 }
 
 model User {
-  id               String            @id @default(uuid())
-  email            String            @unique
-  createdAt        DateTime          @default(now())
-  updatedAt        DateTime          @updatedAt
+  id           String       @id @default(uuid())
+  email        String       @unique
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  tasks        Task[]
+  checkIns     CheckIn[]
+  tags         Tag[]
+  insights     Insight[]
+  decisions    Decision[]
+  decisionLogs DecisionLog[]
+}
 
-  logs             Log[]
-  insights         Insight[]
-  behavioralEvents BehavioralEvent[]
-  decisionLogs     DecisionLog[]
-  decisions        Decision[]
+model Task {
+  id             String       @id @default(uuid())
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type           String
+  difficulty     Int
+  plannedStart   DateTime
+  timezone       String
+  localHour      Int
+  localWeekday   Int
+  cognitiveLoad  Int?
+  plannedMinutes Int?
+  actualStart    DateTime?
+  actualMinutes  Int?
+  energyAtStart  Int?
+  moodAtStart    Int?
+  outcome        TaskOutcome?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  tags           TaskTag[]
+
+  @@index([userId, plannedStart])
+  @@index([userId, outcome, localHour])
+  @@index([userId, outcome, localWeekday])
+}
+
+model CheckIn {
+  id             String        @id @default(uuid())
+  userId         String
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kind           CheckInKind
+  value          Int
+  predictedValue Int?
+  timestamp      DateTime
+  timezone       String?
+  note           String?
+  createdAt      DateTime      @default(now())
+  tags           CheckInTag[]
+
+  @@index([userId, createdAt])
+  @@index([userId, kind, timestamp])
+}
+
+model Tag {
+  id        String      @id @default(uuid())
+  userId    String
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  category  TagCategory?
+  tasks     TaskTag[]
+  checkIns  CheckInTag[]
+
+  @@unique([userId, name])
+  @@index([userId])
+}
+
+model TaskTag {
+  taskId String
+  tagId  String
+  task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([taskId, tagId])
+  @@index([tagId])
+}
+
+model CheckInTag {
+  checkInId String
+  tagId     String
+  checkIn   CheckIn @relation(fields: [checkInId], references: [id], onDelete: Cascade)
+  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([checkInId, tagId])
+  @@index([tagId])
+}
+
+model Insight {
+  id             String       @id @default(uuid())
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type           InsightType
+  dedupeKey      String
+  message        String
+  recommendation String?
+  priority       InsightPriority @default(MEDIUM)
+  confidence     Float?
+  sampleSize     Int
+  windowStart    DateTime?
+  windowEnd      DateTime?
+  status         InsightStatus @default(NEW)
+  evidence       Json
+  generatedAt    DateTime     @default(now())
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@unique([userId, dedupeKey])
+  @@index([userId, generatedAt])
+  @@index([userId, status])
 }
 
 model Decision {
-  id          Int      @id @default(autoincrement())
+  id          String    @id @default(uuid())
   userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   description String
   tags        String?
   riskScore   Int
-  riskLevel   String
+  riskLevel   RiskLevel
   explanation String
-  createdAt   DateTime @default(now())
+  createdAt   DateTime  @default(now())
 
   @@index([userId, createdAt])
 }
 
-model BehavioralEvent {
-  id           String    @id @default(uuid())
-  userId       String
-  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  taskType     String?
-  plannedTime  DateTime?
-  executedTime DateTime?
-  energyLevel  Int?
-  moodLevel    Int?
-  difficulty   Int?
-  outcome      String?
-  createdAt    DateTime  @default(now())
+model DecisionLog {
+  id               String          @id @default(uuid())
+  userId           String
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  action           String
+  context          Json
+  outcome          DecisionOutcome
+  productivityDrop Int?
+  createdAt        DateTime        @default(now())
 
   @@index([userId, createdAt])
 }
 
-model Log {
-  id            String       @id @default(uuid())
-  userId        String
-  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  behaviorType  BehaviorType
-  value         Int
-  expectedValue Int?
-  outcome       String?      @default("success")
-  timestamp     DateTime
-  timezone      String?
-  note          String?
-  createdAt     DateTime     @default(now())
-  tags          LogTag[]
-
-  @@index([userId, createdAt])
+enum TaskOutcome {
+  SUCCESS
+  FAIL
 }
 
-enum BehaviorType {
+enum CheckInKind {
   ENERGY
   MOOD
 }
 
 enum TagCategory {
-  Location
-  State
-  Activity
-}
-
-model Tag {
-  id       String       @id @default(uuid())
-  name     String       @unique
-  category TagCategory?
-  logs     LogTag[]
-}
-
-model LogTag {
-  log    Log    @relation(fields: [logId], references: [id], onDelete: Cascade)
-  logId  String
-  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
-  tagId  String
-
-  @@id([logId, tagId])
-}
-
-model DecisionLog {
-  id               String   @id @default(uuid())
-  userId           String
-  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  action           String
-  context          Json
-  outcome          String
-  productivityDrop Int?
-  createdAt        DateTime @default(now())
-
-  @@index([userId, createdAt])
-}
-
-model Insight {
-  id             String      @id @default(uuid())
-  userId         String
-  user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  type           InsightType
-  message        String
-  recommendation String?
-  priority       String
-  confidence     Float?
-  insights       Json
-  analysis       Json
-  generatedAt    DateTime    @default(now())
-  createdAt      DateTime    @default(now())
-
-  @@index([userId, generatedAt])
+  LOCATION
+  STATE
+  ACTIVITY
+  TASK_TYPE
 }
 
 enum InsightType {
@@ -128,4 +168,33 @@ enum InsightType {
   TREND
   TIME_OF_DAY
   SUDDEN_DROP
+  ENERGY_CORRELATION
+  PLANNING_ACCURACY
+}
+
+enum InsightPriority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum InsightStatus {
+  NEW
+  SEEN
+  DISMISSED
+  ACTED_ON
+}
+
+enum RiskLevel {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum DecisionOutcome {
+  SUCCESS
+  FAILURE
+  ABANDONED
+  UNKNOWN
 }
