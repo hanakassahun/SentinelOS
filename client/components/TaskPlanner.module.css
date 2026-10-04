@@ -1,0 +1,148 @@
+.panel {
+  border: 1px solid #d8e2e0;
+  border-radius: 8px;
+  background: #fbfdfc;
+  padding: 18px;
+  color: #1f3433;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.header h2 {
+  margin: 2px 0 0;
+  font-size: 1.15rem;
+}
+
+.kicker {
+  margin: 0;
+  color: #567773;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.count {
+  color: #567773;
+  font-size: 0.85rem;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e2eae8;
+}
+
+.form label,
+.duration {
+  display: grid;
+  gap: 5px;
+  color: #4d6562;
+  font-size: 0.78rem;
+}
+
+.form input,
+.form select,
+.duration input {
+  width: 100%;
+  min-width: 0;
+  height: 38px;
+  border: 1px solid #c9d7d4;
+  border-radius: 5px;
+  background: white;
+  color: #1f3433;
+  padding: 0 9px;
+  font: inherit;
+}
+
+.planButton {
+  align-self: end;
+  height: 38px;
+  border: 0;
+  border-radius: 5px;
+  background: #186b62;
+  color: white;
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.planButton:disabled,
+.actions button:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
+.list {
+  display: grid;
+}
+
+.task {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 110px auto;
+  align-items: end;
+  gap: 12px;
+  padding: 13px 0;
+  border-bottom: 1px solid #e7eeec;
+}
+
+.taskInfo {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.taskInfo strong {
+  overflow-wrap: anywhere;
+}
+
+.taskInfo span {
+  color: #63807b;
+  font-size: 0.78rem;
+}
+
+.actions {
+  display: flex;
+  gap: 6px;
+}
+
+.actions button {
+  min-height: 36px;
+  border: 1px solid #b8cfca;
+  border-radius: 5px;
+  background: white;
+  color: #20564f;
+  padding: 0 10px;
+  cursor: pointer;
+}
+
+.error {
+  color: #a83232;
+  font-size: 0.85rem;
+}
+
+.empty {
+  margin: 14px 0 0;
+  color: #63807b;
+  font-size: 0.88rem;
+}
+
+@media (max-width: 640px) {
+  .form {
+    grid-template-columns: 1fr;
+  }
+
+  .task {
+    grid-template-columns: minmax(0, 1fr) 100px;
+  }
+
+  .actions {
+    grid-column: 1 / -1;
+  }
+}

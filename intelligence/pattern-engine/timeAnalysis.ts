@@ -1,6 +1,6 @@
-import type { BehavioralEvent } from '../types';
+import type { TaskEvent } from '../types';
 
-export function analyzeByTime(events: BehavioralEvent[]) {
+export function analyzeByTime(events: TaskEvent[]) {
   const blocks = [
     { label: 'Night', start: 0, end: 6 },
     { label: 'Morning', start: 6, end: 12 },
@@ -9,12 +9,8 @@ export function analyzeByTime(events: BehavioralEvent[]) {
     { label: 'Late', start: 21, end: 24 },
   ];
   const blockStats = blocks.map((block) => {
-    const filtered = events.filter(e => {
-      const time = e.executedTime || e.plannedTime || e.createdAt;
-      const hour = new Date(time).getHours();
-      return hour >= block.start && hour < block.end;
-    });
-    const successes = filtered.filter(e => e.outcome === 'success').length;
+    const filtered = events.filter(e => e.outcome !== null && e.outcome !== undefined && e.localHour >= block.start && e.localHour < block.end);
+    const successes = filtered.filter(e => e.outcome === 'SUCCESS').length;
     const total = filtered.length;
     return {
       label: block.label,

@@ -9,8 +9,6 @@
  * - Data quality validation
  */
 
-import { BehavioralEvent } from '../types';
-
 export interface TimeWindow {
   label: string;
   start: Date;
@@ -50,14 +48,14 @@ export function generateTimeWindows(now: Date, windowSize: number): TimeWindow[]
   return windows;
 }
 
-export function filterByDateRange<T extends { timestamp?: string; createdAt?: string; executedTime?: string; plannedTime?: string }>(
+export function filterByDateRange<T extends { timestamp?: string; createdAt?: string; actualStart?: string; plannedStart?: string }>(
   items: T[],
   start: Date,
   end: Date,
 ): T[] {
   return items.filter((item) => {
     const timestamp = new Date(
-      item.timestamp || item.executedTime || item.plannedTime || item.createdAt || '',
+      item.timestamp || item.actualStart || item.plannedStart || item.createdAt || '',
     );
     return timestamp >= start && timestamp <= end;
   });

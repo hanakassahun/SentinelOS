@@ -9,7 +9,7 @@
  * - High-performing and problematic periods
  */
 
-import { BehavioralEvent } from '../types';
+import type { TaskEvent } from '../types';
 import { groupBy, getTimeBlock, computeMetrics, AggregatedMetrics } from './dataAggregator';
 
 export interface TaskTypeStats {
@@ -65,17 +65,23 @@ export interface BehavioralInsight {
  * @param events Raw event records
  * @returns Normalized events
  */
-export function normalizeBehavioralEvents(events: any[]): BehavioralEvent[] {
+export function normalizeTasks(events: any[]): TaskEvent[] {
   return events.map((e) => ({
     id: e.id || '',
     userId: e.userId || '',
-    taskType: e.taskType || 'unknown',
-    plannedTime: e.plannedTime ? new Date(e.plannedTime).toISOString() : undefined,
-    executedTime: e.executedTime ? new Date(e.executedTime).toISOString() : undefined,
-    energyLevel: e.energyLevel as any,
-    moodLevel: e.moodLevel as any,
+    type: typeof e.type === 'string' ? e.type.trim().toLowerCase() : 'unknown',
     difficulty: e.difficulty,
-    outcome: e.outcome as any,
+    plannedStart: new Date(e.plannedStart).toISOString(),
+    timezone: e.timezone,
+    localHour: e.localHour,
+    localWeekday: e.localWeekday,
+    cognitiveLoad: e.cognitiveLoad ?? undefined,
+    plannedMinutes: e.plannedMinutes ?? undefined,
+    actualStart: e.actualStart ? new Date(e.actualStart).toISOString() : undefined,
+    actualMinutes: e.actualMinutes ?? undefined,
+    energyAtStart: e.energyAtStart ?? undefined,
+    moodAtStart: e.moodAtStart ?? undefined,
+    outcome: e.outcome ?? null,
     createdAt: e.createdAt ? new Date(e.createdAt).toISOString() : new Date().toISOString(),
   }));
 }
@@ -85,24 +91,25 @@ export function normalizeBehavioralEvents(events: any[]): BehavioralEvent[] {
  * @param events Behavioral events
  * @returns Task type statistics
  */
-export function analyzeTaskTypes(events: BehavioralEvent[]): TaskTypeStats[] {
-  const grouped = groupBy(events, (e) => e.taskType || 'unknown');
+export function analyzeTaskTypes(events: TaskEvent[]): TaskTypeStats[] {
+  const finished = events.filter((event) => event.outcome !== null && event.outcome !== undefined);
+  const grouped = groupBy(finished, (e) => e.type || 'unknown');
   const stats: TaskTypeStats[] = [];
 
   for (const [taskType, typeEvents] of grouped) {
-    const successes = typeEvents.filter((e) => e.outcome === 'success').length;
-    const failures = typeEvents.filter((e) => e.outcome === 'fail').length;
+    const successes = typeEvents.filter((e) => e.outcome === 'SUCCESS').length;
+    const failures = typeEvents.filter((e) => e.outcome === 'FAIL').length;
     const total = typeEvents.length;
 
     const successEnergy = typeEvents
-      .filter((e) => e.outcome === 'success' && e.energyLevel !== undefined)
-      .map((e) => e.energyLevel!);
+      .filter((e) => e.outcome === 'SUCCESS' && e.energyAtStart !== undefined)
+      .map((e) => e.energyAtStart!);
     const failureEnergy = typeEvents
-      .filter((e) => e.outcome === 'fail' && e.energyLevel !== undefined)
-      .map((e) => e.energyLevel!);
+      .filter((e) => e.outcome === 'FAIL' && e.energyAtStart !== undefined)
+      .map((e) => e.energyAtStart!);
 
-    const allEnergy = typeEvents.filter((e) => e.energyLevel !== undefined).map((e) => e.energyLevel!);
-    const allMood = typeEvents.filter((e) => e.moodLevel !== undefined).map((e) => e.moodLevel!);
+    const allEnergy = typeEvents.filter((e) => e.energyAtStart !== undefined).map((e) => e.energyAtStart!);
+    const allMood = typeEvents.filter((e) => e.moodAtStart !== undefined).map((e) => e.moodAtStart!);
     const allDifficulty = typeEvents.filter((e) => e.difficulty !== undefined).map((e) => e.difficulty!);
 
     const avgEnergy = allEnergy.length > 0 ? Number((allEnergy.reduce((a, b) => a + b, 0) / allEnergy.length).toFixed(2)) : undefined;
@@ -137,7 +144,7 @@ export function analyzeTaskTypes(events: BehavioralEvent[]): TaskTypeStats[] {
  * @param events Behavioral events
  * @returns Time block analysis
  */
-export function analyzeByTimeOfDay(events: BehavioralEvent[]): TimeBlockAnalysis[] {
+export function analyzeByTimeOfDay(events: TaskEvent[]): TimeBlockAnalysis[] {
   const blocks = [
     { label: 'Night', start: 0, end: 6 },
     { label: 'Morning', start: 6, end: 12 },
@@ -149,23 +156,21 @@ export function analyzeByTimeOfDay(events: BehavioralEvent[]): TimeBlockAnalysis
   const analysis: TimeBlockAnalysis[] = [];
 
   for (const block of blocks) {
-    const blockEvents = events.filter((e) => {
-      const time = e.executedTime || e.plannedTime || e.createdAt;
-      const hour = new Date(time).getHours();
-      return hour >= block.start && hour < block.end;
-    });
+    const blockEvents = events.filter((event) =>
+      event.outcome !== null && event.outcome !== undefined &&
+      event.localHour >= block.start && event.localHour < block.end);
 
     if (blockEvents.length === 0) continue;
 
-    const successes = blockEvents.filter((e) => e.outcome === 'success').length;
-    const failures = blockEvents.filter((e) => e.outcome === 'fail').length;
+    const successes = blockEvents.filter((e) => e.outcome === 'SUCCESS').length;
+    const failures = blockEvents.filter((e) => e.outcome === 'FAIL').length;
 
     const energyValues = blockEvents
-      .filter((e) => e.energyLevel !== undefined)
-      .map((e) => e.energyLevel!);
+      .filter((e) => e.energyAtStart !== undefined)
+      .map((e) => e.energyAtStart!);
     const moodValues = blockEvents
-      .filter((e) => e.moodLevel !== undefined)
-      .map((e) => e.moodLevel!);
+      .filter((e) => e.moodAtStart !== undefined)
+      .map((e) => e.moodAtStart!);
 
     const avgEnergy = energyValues.length > 0 ? Number((energyValues.reduce((a, b) => a + b, 0) / energyValues.length).toFixed(2)) : undefined;
     const avgMood = moodValues.length > 0 ? Number((moodValues.reduce((a, b) => a + b, 0) / moodValues.length).toFixed(2)) : undefined;
@@ -196,7 +201,7 @@ export function analyzeByTimeOfDay(events: BehavioralEvent[]): TimeBlockAnalysis
  * @param energyData Optional array of energy values for correlation
  * @returns Behavioral analysis results
  */
-export function analyzeBehavior(events: BehavioralEvent[], energyData?: number[]): BehavioralAnalysis {
+export function analyzeBehavior(events: TaskEvent[], energyData?: number[]): BehavioralAnalysis {
   if (events.length === 0) {
     return {
       totalEvents: 0,
@@ -209,10 +214,21 @@ export function analyzeBehavior(events: BehavioralEvent[], energyData?: number[]
   }
 
   // Overall success/failure rates
-  const successCount = events.filter((e) => e.outcome === 'success').length;
-  const failureCount = events.filter((e) => e.outcome === 'fail').length;
-  const overallSuccessRate = Number(((successCount / events.length) * 100).toFixed(1));
-  const overallFailureRate = Number(((failureCount / events.length) * 100).toFixed(1));
+  const finished = events.filter((event) => event.outcome !== null && event.outcome !== undefined);
+  if (finished.length === 0) {
+    return {
+      totalEvents: 0,
+      overallSuccessRate: 0,
+      overallFailureRate: 0,
+      taskTypeStats: [],
+      timeBlockAnalysis: [],
+      consistencyScore: 0,
+    };
+  }
+  const successCount = finished.filter((e) => e.outcome === 'SUCCESS').length;
+  const failureCount = finished.filter((e) => e.outcome === 'FAIL').length;
+  const overallSuccessRate = Number(((successCount / finished.length) * 100).toFixed(1));
+  const overallFailureRate = Number(((failureCount / finished.length) * 100).toFixed(1));
 
   // Task type analysis
   const taskTypeStats = analyzeTaskTypes(events);
@@ -226,21 +242,18 @@ export function analyzeBehavior(events: BehavioralEvent[], energyData?: number[]
   const worstPerformingTimeBlock = sortedBlocks[sortedBlocks.length - 1];
 
   // Correlations
-  const outcomeNumeric = events
-    .filter((e) => e.outcome !== undefined)
-    .map((e) => (e.outcome === 'success' ? 1 : 0));
-  const energyValues = events
-    .filter((e) => e.energyLevel !== undefined)
-    .map((e) => e.energyLevel!);
-  const moodValues = events
-    .filter((e) => e.moodLevel !== undefined)
-    .map((e) => e.moodLevel!);
+  const withEnergy = finished.filter((event) => event.energyAtStart !== undefined);
+  const withMood = finished.filter((event) => event.moodAtStart !== undefined);
+  const energyOutcomes = withEnergy.map((event) => event.outcome === 'SUCCESS' ? 1 : 0);
+  const moodOutcomes = withMood.map((event) => event.outcome === 'SUCCESS' ? 1 : 0);
+  const energyValues = withEnergy.map((event) => event.energyAtStart!);
+  const moodValues = withMood.map((event) => event.moodAtStart!);
 
-  const maybeEnergyCorr = outcomeNumeric.length === energyValues.length && energyValues.length > 1
-    ? computePearsonCorrelation(energyValues, outcomeNumeric)
+  const maybeEnergyCorr = energyOutcomes.length > 1
+    ? computePearsonCorrelation(energyValues, energyOutcomes)
     : null;
-  const maybeMoodCorr = outcomeNumeric.length === moodValues.length && moodValues.length > 1
-    ? computePearsonCorrelation(moodValues, outcomeNumeric)
+  const maybeMoodCorr = moodOutcomes.length > 1
+    ? computePearsonCorrelation(moodValues, moodOutcomes)
     : null;
 
   let energyOutcomeCorrelation: number | undefined = maybeEnergyCorr !== null ? maybeEnergyCorr : undefined;
@@ -255,11 +268,11 @@ export function analyzeBehavior(events: BehavioralEvent[], energyData?: number[]
 
   // Planning accuracy: % of events where planned and executed times are within reasonable window (24 hours)
   let planningAccuracy = 0;
-  const withPlannedAndExecuted = events.filter((e) => e.plannedTime && e.executedTime);
+  const withPlannedAndExecuted = finished.filter((e) => e.actualStart);
   if (withPlannedAndExecuted.length > 0) {
     const matching = withPlannedAndExecuted.filter((e) => {
-      const planned = new Date(e.plannedTime!).getTime();
-      const executed = new Date(e.executedTime!).getTime();
+      const planned = new Date(e.plannedStart).getTime();
+      const executed = new Date(e.actualStart!).getTime();
       const diff = Math.abs(executed - planned);
       return diff < 24 * 60 * 60 * 1000; // 24 hours
     }).length;
@@ -267,7 +280,7 @@ export function analyzeBehavior(events: BehavioralEvent[], energyData?: number[]
   }
 
   return {
-    totalEvents: events.length,
+    totalEvents: finished.length,
     overallSuccessRate,
     overallFailureRate,
     taskTypeStats,

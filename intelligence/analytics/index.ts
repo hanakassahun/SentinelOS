@@ -36,7 +36,7 @@ export {
   generateBehavioralInsights,
   analyzeTaskTypes,
   analyzeByTimeOfDay,
-  normalizeBehavioralEvents,
+  normalizeTasks,
 } from './behavioralAnalyzer';
 export type {
   BehavioralAnalysis,

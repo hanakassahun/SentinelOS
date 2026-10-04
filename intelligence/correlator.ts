@@ -57,11 +57,6 @@ export class InsightTemplateEngine {
   }
 }
 
-function normalizeOutcome(outcome?: string | null): boolean {
-  const normalized = (outcome ?? '').toLowerCase();
-  return ['completed', 'complete', 'success', 'succeeded', 'done'].includes(normalized);
-}
-
 export function analyzeDeviations(history: AggregatedTaskHistory[]): HighFrictionZone[] {
   if (history.length === 0) {
     return [];
@@ -104,19 +99,18 @@ export function correlateTimeBlocks(events: readonly TaskEvent[]): PerformanceIn
   }
 
   events.forEach((task) => {
-    const referenceTime = task.executedTime ?? task.plannedTime;
-    if (!referenceTime) {
+    if (task.outcome === null || task.outcome === undefined) {
       return;
     }
 
-    const hour = new Date(referenceTime).getHours();
+    const hour = task.localHour;
     if (!Number.isInteger(hour) || hour < 0 || hour > 23) {
       return;
     }
 
     blocks[hour].total += 1;
 
-    if (normalizeOutcome(task.outcome)) {
+    if (task.outcome === 'SUCCESS') {
       blocks[hour].completed += 1;
     }
   });

@@ -40,12 +40,15 @@ export async function saveShadowSnapshot(req: Request, res: Response) {
     const saved = await prisma.insight.create({
       data: {
         userId,
-        // Use existing InsightType enum values defined in Prisma schema
         type: 'TIME_OF_DAY',
+        dedupeKey: `SHADOW_SNAPSHOT:${new Date().toISOString().slice(0, 10)}`,
         message: 'Persisted shadow schedule snapshot',
-        priority: 'low',
-        insights: points as any,
-        analysis: { generatedAt: new Date().toISOString() } as any,
+        priority: 'LOW',
+        sampleSize: points.reduce((total, point) => total + Number(point?.totalTasks ?? 0), 0),
+        windowStart: null,
+        windowEnd: null,
+        status: 'NEW',
+        evidence: points as any,
       },
     });
 

@@ -138,9 +138,9 @@ export default function QuickLog() {
     }
 
     const payload: any = {
-      behaviorType: behavior,
+      kind: behavior,
       value,
-      expectedValue,
+      predictedValue: expectedValue,
       timestamp: new Date().toISOString(),
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       tags,
@@ -158,7 +158,7 @@ export default function QuickLog() {
     // optimistic feedback
     setMessage('✅ Logged. You\'re building your behavioral intelligence.');
     setLastLogAt(Date.now());
-    const optimisticEntry = { behaviorType: behavior, value, timestamp: new Date().toISOString(), tags, note };
+    const optimisticEntry = { kind: behavior, value, timestamp: new Date().toISOString(), tags, note };
     const newRecent = [optimisticEntry, ...recent].slice(0, 10);
     setRecent(newRecent);
     try {
@@ -166,7 +166,7 @@ export default function QuickLog() {
     } catch {}
 
     try {
-      const res = await fetch('/api/logs', {
+      const res = await fetch('/api/checkins', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),

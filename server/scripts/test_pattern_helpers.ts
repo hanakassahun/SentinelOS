@@ -8,5 +8,16 @@ console.log('avg up', calculateAverage(up));
 console.log('trend up', detectTrend(up));
 console.log('trend down', detectTrend(down));
 console.log('trend stable', detectTrend(stable));
-console.log('corr up-down', correlateEnergy(up.map(v=>({energyLevel:v,outcome:'success'} as any))));
-console.log('corr up-up', correlateEnergy(up.map(v=>({energyLevel:v,outcome:'success'} as any))));
+console.log('corr planted energy/outcome pattern', correlateEnergy(up.map((value, index) => ({
+	id: String(index),
+	userId: 'seed',
+	type: 'deep work',
+	difficulty: 3,
+	plannedStart: new Date().toISOString(),
+	timezone: 'UTC',
+	localHour: 9,
+	localWeekday: 1,
+	energyAtStart: value,
+	outcome: index < 5 ? 'FAIL' : 'SUCCESS',
+	createdAt: new Date().toISOString(),
+}))));

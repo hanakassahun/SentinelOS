@@ -1,8 +1,3 @@
-export enum BehaviorType {
-  ENERGY = 'ENERGY',
-  MOOD = 'MOOD',
-}
-
 export type Rating = 1|2|3|4|5|6|7|8|9|10;
 
 export interface Tag {
@@ -11,12 +6,12 @@ export interface Tag {
   category?: 'Location' | 'State' | 'Activity';
 }
 
-export interface LogEntry {
+export interface CheckInEntry {
   id: string;
   userId: string;
-  behaviorType: BehaviorType;
+  kind: 'ENERGY' | 'MOOD';
   value: Rating;
-  expectedValue?: Rating;
+  predictedValue?: Rating;
   timestamp: string; // ISO timestamp
   timezone?: string;
   tags?: string[]; // tag ids
@@ -24,8 +19,25 @@ export interface LogEntry {
   createdAt: string;
 }
 
+export interface TaskEntry {
+  id: string;
+  userId: string;
+  type: string;
+  difficulty: 1|2|3|4|5;
+  plannedStart: string;
+  timezone: string;
+  localHour: number;
+  localWeekday: number;
+  outcome?: 'SUCCESS' | 'FAIL' | null;
+}
+
 export interface Insight {
   id: string;
-  text: string;
+  type: string;
+  dedupeKey: string;
+  message: string;
+  sampleSize: number;
+  status: 'NEW' | 'SEEN' | 'DISMISSED' | 'ACTED_ON';
+  evidence: unknown;
   createdAt: string;
 }

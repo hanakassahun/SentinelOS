@@ -9,6 +9,7 @@ import RecommendationBanner from '../../components/RecommendationBanner';
 import InsightsCharts from '../../components/InsightsCharts';
 import Heatmap from '../../components/Heatmap';
 import ShadowScheduleViewer from '../../components/ShadowScheduleViewer';
+import TaskPlanner from '../../components/TaskPlanner';
 import { useAnalyticsData } from '../../hooks/useAnalyticsData';
 import { DEFAULT_USER_ID } from '../../config';
 import styles from './Dashboard.module.css';
@@ -162,6 +163,7 @@ export default function Dashboard() {
       <TopNav />
       <main className={styles.dashboard}>
         <section>
+          <TaskPlanner />
           <div className={styles.hero}>
             <div className={styles.heroIntro}>
               <div className={styles.heroLine}>sentinel / analytics / dashboard</div>

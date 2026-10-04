@@ -81,11 +81,11 @@ export async function getInsightsSimple(req: Request, res: Response) {
     const userId = String(req.query.userId || 'default');
     const report = await getBehavioralInsightReport(userId);
     const response = toInsightResponse(report);
-    const logs = report.events
-      .filter((event) => typeof event.energyLevel === 'number')
-      .map((event) => ({
-        value: event.energyLevel as number,
-        timestamp: event.createdAt,
+    const logs = report.checkIns
+      .filter((checkIn) => checkIn.kind === 'ENERGY')
+      .map((checkIn) => ({
+        value: checkIn.value,
+        timestamp: checkIn.timestamp,
       }));
 
     res.json({

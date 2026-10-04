@@ -1,11 +1,12 @@
-import type { BehavioralEvent } from '../types';
+import type { TaskEvent } from '../types';
 
-export function computeSuccessRate(events: BehavioralEvent[]) {
-  const taskTypes = Array.from(new Set(events.map(e => e.taskType || 'unknown')));
+export function computeSuccessRate(events: TaskEvent[]) {
+  const finished = events.filter((event) => event.outcome !== null && event.outcome !== undefined);
+  const taskTypes = Array.from(new Set(finished.map((event) => event.type || 'unknown')));
   const stats = taskTypes.map(type => {
-    const filtered = events.filter(e => (e.taskType || 'unknown') === type);
-    const successes = filtered.filter(e => e.outcome === 'success').length;
-    const failures = filtered.filter(e => e.outcome === 'fail').length;
+    const filtered = finished.filter(e => (e.type || 'unknown') === type);
+    const successes = filtered.filter(e => e.outcome === 'SUCCESS').length;
+    const failures = filtered.filter(e => e.outcome === 'FAIL').length;
     const total = filtered.length;
     return {
       taskType: type,
@@ -25,12 +26,7 @@ export function computeSuccessRate(events: BehavioralEvent[]) {
     { label: 'Late', start: 21, end: 24 },
   ];
   const failureClusters = blocks.map(block => {
-    const failures = events.filter(e => {
-      if (e.outcome !== 'fail') return false;
-      const time = e.executedTime || e.plannedTime || e.createdAt;
-      const hour = new Date(time).getHours();
-      return hour >= block.start && hour < block.end;
-    });
+    const failures = finished.filter(e => e.outcome === 'FAIL' && e.localHour >= block.start && e.localHour < block.end);
     return {
       label: block.label,
       count: failures.length,
@@ -38,9 +34,8 @@ export function computeSuccessRate(events: BehavioralEvent[]) {
     };
   }).filter(cluster => cluster.count > 0);
 
-  const execTimes = events
-    .map(e => e.executedTime || e.plannedTime)
-    .filter((time): time is string => typeof time === 'string')
+  const execTimes = finished
+    .map((event) => event.actualStart ?? event.plannedStart)
     .map(t => new Date(t).getTime());
   let consistencyScore = null;
   if (execTimes.length > 1) {

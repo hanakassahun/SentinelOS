@@ -23,12 +23,12 @@ import {
 import {
   analyzeBehavior,
   generateBehavioralInsights,
-  normalizeBehavioralEvents,
+  normalizeTasks,
   type BehavioralAnalysis,
   type BehavioralInsight,
 } from './behavioralAnalyzer';
 
-import { BehavioralEvent } from '../types';
+import type { TaskEvent } from '../types';
 
 export interface ComprehensiveAnalytics {
   timestamp: Date;
@@ -55,7 +55,7 @@ export interface Recommendation {
 export interface AnalyticsInput {
   userId: string;
   decisions: any[];
-  behavioralEvents: any[];
+  tasks: TaskEvent[];
 }
 
 /**
@@ -66,7 +66,7 @@ export interface AnalyticsInput {
 export function runComprehensiveAnalytics(input: AnalyticsInput): ComprehensiveAnalytics {
   // Normalize inputs
   const decisions = normalizeDecisions(input.decisions || []);
-  const events = normalizeBehavioralEvents(input.behavioralEvents || []);
+  const events = normalizeTasks(input.tasks || []);
 
   // Run analyses
   const decisionAnalysis = analyzeDecisionPatterns(decisions);

@@ -16,7 +16,7 @@ import {
   normalizeDecisions,
   analyzeBehavior,
   generateBehavioralInsights,
-  normalizeBehavioralEvents,
+  normalizeTasks,
 } from '../../../intelligence/analytics';
 
 /**
@@ -39,13 +39,13 @@ export const getComprehensiveAnalysis = async (req: Request, res: Response): Pro
   }
 
   // Fetch user data from database
-  const [decisions, behavioralEvents] = await Promise.all([
+  const [decisions, tasks] = await Promise.all([
     (prisma as any).decision.findMany({
       where: { userId },
       orderBy: { createdAt: 'desc' },
       take: 200, // Last 200 decisions for context
     }),
-    (prisma as any).behavioralEvent.findMany({
+    prisma.task.findMany({
       where: { userId },
       orderBy: { createdAt: 'desc' },
       take: 500, // Last 500 events for comprehensive analysis
@@ -56,7 +56,17 @@ export const getComprehensiveAnalysis = async (req: Request, res: Response): Pro
   const analysis = runComprehensiveAnalytics({
     userId,
     decisions,
-    behavioralEvents,
+    tasks: tasks.map((task) => ({
+      ...task,
+      plannedStart: task.plannedStart.toISOString(),
+      actualStart: task.actualStart?.toISOString() ?? undefined,
+      cognitiveLoad: task.cognitiveLoad ?? undefined,
+      plannedMinutes: task.plannedMinutes ?? undefined,
+      actualMinutes: task.actualMinutes ?? undefined,
+      energyAtStart: task.energyAtStart ?? undefined,
+      moodAtStart: task.moodAtStart ?? undefined,
+      createdAt: task.createdAt.toISOString(),
+    })),
   });
 
   res.status(200).json({
@@ -148,7 +158,7 @@ export const getBehaviorMetrics = async (req: Request, res: Response): Promise<v
   }
 
   // Fetch behavioral events
-  const events = await prisma.behavioralEvent.findMany({
+  const events = await prisma.task.findMany({
     where: { userId },
     orderBy: { createdAt: 'desc' },
     take: limit,
@@ -167,7 +177,17 @@ export const getBehaviorMetrics = async (req: Request, res: Response): Promise<v
   }
 
   // Normalize and analyze
-  const normalized = normalizeBehavioralEvents(events);
+  const normalized = normalizeTasks(events.map((task) => ({
+    ...task,
+    plannedStart: task.plannedStart.toISOString(),
+    actualStart: task.actualStart?.toISOString(),
+    cognitiveLoad: task.cognitiveLoad ?? undefined,
+    plannedMinutes: task.plannedMinutes ?? undefined,
+    actualMinutes: task.actualMinutes ?? undefined,
+    energyAtStart: task.energyAtStart ?? undefined,
+    moodAtStart: task.moodAtStart ?? undefined,
+    createdAt: task.createdAt.toISOString(),
+  })));
   const behavioralAnalysis = analyzeBehavior(normalized);
   const insights = generateBehavioralInsights(behavioralAnalysis);
 
@@ -203,13 +223,13 @@ export const getHealthScore = async (req: Request, res: Response): Promise<void>
   }
 
   // Fetch minimal data for quick health score
-  const [decisions, behavioralEvents] = await Promise.all([
+  const [decisions, tasks] = await Promise.all([
     (prisma as any).decision.findMany({
       where: { userId },
       orderBy: { createdAt: 'desc' },
       take: 50,
     }),
-    (prisma as any).behavioralEvent.findMany({
+    prisma.task.findMany({
       where: { userId },
       orderBy: { createdAt: 'desc' },
       take: 100,
@@ -220,7 +240,17 @@ export const getHealthScore = async (req: Request, res: Response): Promise<void>
   const analysis = runComprehensiveAnalytics({
     userId,
     decisions,
-    behavioralEvents,
+    tasks: tasks.map((task) => ({
+      ...task,
+      plannedStart: task.plannedStart.toISOString(),
+      actualStart: task.actualStart?.toISOString() ?? undefined,
+      cognitiveLoad: task.cognitiveLoad ?? undefined,
+      plannedMinutes: task.plannedMinutes ?? undefined,
+      actualMinutes: task.actualMinutes ?? undefined,
+      energyAtStart: task.energyAtStart ?? undefined,
+      moodAtStart: task.moodAtStart ?? undefined,
+      createdAt: task.createdAt.toISOString(),
+    })),
   });
 
   res.status(200).json({

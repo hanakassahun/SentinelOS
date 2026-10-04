@@ -1,11 +1,10 @@
-import type { BehavioralEvent } from '../types';
+import type { TaskEvent } from '../types';
 
-export function correlateEnergy(events: BehavioralEvent[]) {
-  // Correlate energy levels with success/failure
-  const withEnergy = events.filter(e => typeof e.energyLevel === 'number' && e.outcome);
+export function correlateEnergy(events: TaskEvent[]) {
+  const withEnergy = events.filter(e => typeof e.energyAtStart === 'number' && e.outcome !== null && e.outcome !== undefined);
   if (withEnergy.length < 2) return { correlation: null, summary: 'Insufficient data' };
-  const energy = withEnergy.map(e => e.energyLevel as number);
-  const outcome = withEnergy.map(e => e.outcome === 'success' ? 1 : 0);
+  const energy = withEnergy.map(e => e.energyAtStart as number);
+  const outcome = withEnergy.map(e => e.outcome === 'SUCCESS' ? 1 : 0);
   const n = energy.length;
   const avgE = energy.reduce((a, b) => a + b, 0) / n;
   const avgO = outcome.reduce<number>((a, b) => a + b, 0) / n;
